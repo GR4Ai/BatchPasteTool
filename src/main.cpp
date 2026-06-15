@@ -188,8 +188,9 @@ struct HoverZone {
 //  FORWARD DECLARATIONS
 // ============================================================================
 
-LRESULT CALLBACK MainWndProc     (HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK EditSubclassProc(HWND, UINT, WPARAM, LPARAM, UINT_PTR, DWORD_PTR);
+LRESULT CALLBACK MainWndProc        (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK EditSubclassProc   (HWND, UINT, WPARAM, LPARAM, UINT_PTR, DWORD_PTR);
+LRESULT CALLBACK ContentSubclassProc(HWND, UINT, WPARAM, LPARAM, UINT_PTR, DWORD_PTR);
 void     UpdateLayout             ();
 void     RebuildItems         ();
 void     RepositionItem       (int idx);
@@ -427,6 +428,23 @@ void RepositionItem(int idx) {
         bool vis = (cy + ITEM_H > 0 && cy < (g_rcContent.bottom - g_rcContent.top));
         ShowWindow(it.hEdit, vis ? SW_SHOW : SW_HIDE);
     }
+}
+
+// ---- Content container subclass: transparent background ----
+LRESULT CALLBACK ContentSubclassProc(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp,
+                                     UINT_PTR /*subclassId*/, DWORD_PTR /*refData*/) {
+    switch (msg) {
+    case WM_ERASEBKGND:
+        return 1;  // Skip background erase — let parent custom drawing show through
+    case WM_PAINT: {
+        // Minimal paint — validate without drawing
+        PAINTSTRUCT ps;
+        BeginPaint(hWnd, &ps);
+        EndPaint(hWnd, &ps);
+        return 0;
+    }
+    }
+    return DefSubclassProc(hWnd, msg, wp, lp);
 }
 
 // Values passed via subclass ID (stored as DWORD_PTR in SetWindowSubclass)
@@ -1365,6 +1383,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         g_hContentWnd = CreateWindowW(L"STATIC", nullptr,
                           WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN,
                           0, 0, 100, 100, hwnd, nullptr, g_hInst, nullptr);
+        SetWindowSubclass(g_hContentWnd, ContentSubclassProc, 0, 0);
 
         // Create scrollbar
         g_hScrollbar = CreateWindowW(L"SCROLLBAR", nullptr,
