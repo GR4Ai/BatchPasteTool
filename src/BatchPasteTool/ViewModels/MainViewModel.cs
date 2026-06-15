@@ -67,7 +67,8 @@ public class MainViewModel : INotifyPropertyChanged
             if (Math.Abs(_sliderRatio - value) > 0.001)
             {
                 _sliderRatio = Math.Clamp(value, 0.0, 1.0);
-                TransparencyValue = Constants.TranspMin + (int)(_sliderRatio * (Constants.TranspMax - Constants.TranspMin));
+                // Left(0)=Opaque(255), Right(1)=80%Transparent(51)
+                TransparencyValue = Constants.TranspMax - (int)(_sliderRatio * (Constants.TranspMax - Constants.TranspMin));
                 OnPropertyChanged();
             }
         }
@@ -433,7 +434,7 @@ public class MainViewModel : INotifyPropertyChanged
         else
             TransparencyValue = Constants.TranspMax;     // Toggle to fully opaque
 
-        SliderRatio = (double)(TransparencyValue - Constants.TranspMin) /
+        SliderRatio = (double)(Constants.TranspMax - TransparencyValue) /
                       (Constants.TranspMax - Constants.TranspMin);
     }
 
@@ -492,7 +493,7 @@ public class MainViewModel : INotifyPropertyChanged
 
         IsPinned = settings.Pinned;
         TransparencyValue = settings.Transparency;
-        SliderRatio = (double)(TransparencyValue - Constants.TranspMin) /
+        SliderRatio = (double)(Constants.TranspMax - TransparencyValue) /
                       (Constants.TranspMax - Constants.TranspMin);
 
         // Create items
