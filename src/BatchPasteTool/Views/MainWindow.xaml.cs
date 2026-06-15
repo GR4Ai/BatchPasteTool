@@ -62,12 +62,10 @@ public partial class MainWindow : Window
         if (msg == WM_ENTERSIZEMOVE)
         {
             _isResizing = true;
-            BottomBar.Visibility = Visibility.Hidden;
         }
         else if (msg == WM_EXITSIZEMOVE)
         {
             _isResizing = false;
-            BottomBar.Visibility = Visibility.Visible;
             Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
                 System.Windows.Threading.DispatcherPriority.Loaded);
         }

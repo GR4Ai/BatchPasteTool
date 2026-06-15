@@ -5,8 +5,8 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="#B4B4B4"
+        AllowsTransparency="False"
+        Background="White"
         ResizeMode="CanResize"
         MinWidth="420"
         MinHeight="220"
@@ -286,7 +286,8 @@
     <!-- ================================================================ -->
     <!--  MAIN LAYOUT                                                     -->
     <!-- ================================================================ -->
-    <Grid Margin="1" Background="White">
+    <Border BorderBrush="#B4B4B4" BorderThickness="1" Background="White">
+    <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>  <!-- Title bar -->
             <RowDefinition Height="*"/>   <!-- Content area -->
@@ -435,7 +436,6 @@
                 <!--  ROW 2: BOTTOM BAR                                   -->
                 <!-- ==================================================== -->
                 <Grid Grid.Row="2" Background="White"
-                      x:Name="BottomBar"
                       SnapsToDevicePixels="True"
                       TextOptions.TextFormattingMode="Display">
                     <Grid.CacheMode>
@@ -502,4 +502,5 @@
                     </StackPanel>
                 </Grid>
     </Grid>
+    </Border>
 </Window>
