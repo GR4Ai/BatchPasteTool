@@ -78,30 +78,6 @@ public partial class MainWindow : Window
             { handled = true; return new IntPtr(NativeMethods.HTBOTTOM); }
         }
 
-        if (msg == NativeMethods.WM_MOUSEACTIVATE)
-        {
-            // Prevent window activation when clicking action buttons (Send, Clear, etc.)
-            // so focus stays on the target application
-            int screenX = (int)(lParam.ToInt64() & 0xFFFF);
-            int screenY = (int)(lParam.ToInt64() >> 16);
-            Point pt = PointFromScreen(new Point(screenX, screenY));
-
-            var hitResult = VisualTreeHelper.HitTest(this, pt);
-            if (hitResult?.VisualHit != null)
-            {
-                DependencyObject? current = hitResult.VisualHit;
-                while (current != null)
-                {
-                    if (current is Button btn && btn.Tag is string tag && tag == "NoActivate")
-                    {
-                        handled = true;
-                        return new IntPtr(NativeMethods.MA_NOACTIVATE);
-                    }
-                    current = VisualTreeHelper.GetParent(current);
-                }
-            }
-        }
-
         return IntPtr.Zero;
     }
 

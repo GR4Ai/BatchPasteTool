@@ -227,7 +227,6 @@
                 <Button Grid.Column="2"
                         VerticalAlignment="Center"
                         Style="{StaticResource SendBtnStyle}"
-                        Tag="NoActivate"
                         Content="Send"
                         Command="{Binding DataContext.SendItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                         CommandParameter="{Binding}"/>

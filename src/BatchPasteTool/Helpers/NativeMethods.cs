@@ -78,6 +78,17 @@ public static class NativeMethods
     [DllImport("user32.dll")]
     public static extern bool SetActiveWindow(IntPtr hWnd);
 
+    // ---- PostMessage for direct keystroke injection (no focus switch) ----
+
+    public const uint WM_KEYDOWN = 0x0100;
+    public const uint WM_KEYUP = 0x0101;
+
+    [DllImport("user32.dll")]
+    public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll")]
+    public static extern uint MapVirtualKey(uint uCode, uint uMapType);
+
     // ---- Window positioning ----
 
     [DllImport("user32.dll")]

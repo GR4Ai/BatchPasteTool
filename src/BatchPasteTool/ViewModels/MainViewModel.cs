@@ -295,67 +295,44 @@ public class MainViewModel : INotifyPropertyChanged
     //  SEND / PASTE
     // ================================================================
 
-    public async void SendItem(PasteItemViewModel? item)
+    public void SendItem(PasteItemViewModel? item)
     {
         if (item == null || string.IsNullOrEmpty(item.Text)) return;
 
-        // Copy to clipboard
         _clipboard.SetText(item.Text);
 
-        // Small delay to ensure clipboard has the data
-        await Task.Delay(30);
-
-        // Simulate Ctrl+V — target window still has focus since
-        // WM_MOUSEACTIVATE prevented our window from activating.
-        _inputSim.SimulateCtrlV();
+        // Use PostMessage to send Ctrl+V directly to target — no focus switch needed
+        var target = _foreground.LastKnownTargetWindow;
+        if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
+        {
+            _inputSim.PostCtrlV(target);
+        }
+        else
+        {
+            // Fallback: use SendInput (requires foreground window)
+            _inputSim.SimulateCtrlV();
+        }
     }
 
     public void SendAllItems()
     {
+        var target = _foreground.LastKnownTargetWindow;
+        bool hasTarget = target != IntPtr.Zero && NativeMethods.IsWindow(target);
+
         foreach (var item in Items)
         {
             if (!string.IsNullOrEmpty(item.Text))
             {
                 _clipboard.SetText(item.Text);
-                Thread.Sleep(30);
+                Thread.Sleep(20);
 
-                var target = _foreground.LastKnownTargetWindow;
-                if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
-                {
-                    SwitchToWindow(target);
-                    Thread.Sleep(80);
-                }
+                if (hasTarget)
+                    _inputSim.PostCtrlV(target);
+                else
+                    _inputSim.SimulateCtrlV();
 
-                _inputSim.SimulateCtrlV();
-                Thread.Sleep(80);
+                Thread.Sleep(60);
             }
-        }
-    }
-
-    /// <summary>
-    /// Robustly switch foreground to the target window using AttachThreadInput.
-    /// </summary>
-    private static void SwitchToWindow(IntPtr target)
-    {
-        // AttachThreadInput trick: attach our thread to the foreground thread
-        // so SetForegroundWindow is allowed to succeed.
-        IntPtr fg = NativeMethods.GetForegroundWindow();
-        uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
-        uint curThread = NativeMethods.GetCurrentThreadId();
-
-        bool attached = false;
-        if (foreThread != curThread)
-        {
-            attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
-        }
-
-        NativeMethods.BringWindowToTop(target);
-        NativeMethods.SetForegroundWindow(target);
-        NativeMethods.SetActiveWindow(target);
-
-        if (attached)
-        {
-            NativeMethods.AttachThreadInput(curThread, foreThread, false);
         }
     }
 
