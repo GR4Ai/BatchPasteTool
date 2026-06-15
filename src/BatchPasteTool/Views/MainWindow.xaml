@@ -5,12 +5,14 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
+        AllowsTransparency="True"
         Background="#B4B4B4"
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="CanResize"
         MinWidth="420"
         MinHeight="220"
         Width="620"
         Height="500"
+        SizeToContent="Manual"
         WindowStartupLocation="Manual"
         Title="BatchPasteTool"
         Icon="pack://application:,,,/BatchPasteTool;component/Resources/app_icon.ico"
@@ -297,7 +299,7 @@
                                    Margin="0,0,8,0"/>
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding TogglePinCommand}">
+                                Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
                                    Width="24" Height="24"/>
                         </Button>
@@ -307,7 +309,7 @@
                     <Button Grid.Column="1" Width="24" Height="24"
                             HorizontalAlignment="Center"
                             Style="{StaticResource IconBtnStyle}"
-                            Command="{Binding ToggleTransparencyCommand}">
+                            Command="{Binding DataContext.ToggleTransparencyCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                         <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
                                Width="24" Height="24"/>
                     </Button>
@@ -328,17 +330,17 @@
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"
                                 Content="─"
-                                Command="{Binding MinimizeCommand}"/>
+                                Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
                         <!-- Max button -->
                         <Button Style="{StaticResource WinBtnStyle}"
                                 Content="□"
-                                Command="{Binding MaximizeRestoreCommand}"/>
+                                Command="{Binding DataContext.MaximizeRestoreCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
                         <!-- Close button -->
                         <Button Style="{StaticResource CloseBtnStyle}"
                                 Content="✕"
-                                Command="{Binding CloseCommand}"/>
+                                Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </StackPanel>
 
                     <!-- Title bar bottom separator -->
@@ -401,7 +403,7 @@
                         <!-- Add button -->
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding AddItemCommand}"
+                                Command="{Binding DataContext.AddItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 Margin="0,0,8,0">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/add.png"
                                    Width="24" Height="24"/>
@@ -410,7 +412,7 @@
                         <!-- Delete button -->
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding DeleteItemCommand}"
+                                Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 Margin="0,0,8,0"
                                 IsEnabled="{Binding CanDelete}">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/delete.png"
@@ -421,7 +423,7 @@
                         <!-- Undo button -->
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding UndoCommand}"
+                                Command="{Binding DataContext.UndoCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 IsEnabled="{Binding CanUndo}">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/undo.png"
                                    Width="24" Height="24"/>
@@ -438,14 +440,14 @@
                         <Button Content="Clear All"
                                 Style="{StaticResource BottomTextBtnStyle}"
                                 Width="70"
-                                Command="{Binding ClearAllItemsCommand}"
+                                Command="{Binding DataContext.ClearAllItemsCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                 Margin="0,0,8,0"/>
 
                         <!-- Clear Texts button -->
                         <Button Content="Clear"
                                 Style="{StaticResource BottomTextBtnStyle}"
                                 Width="48"
-                                Command="{Binding ClearAllTextsCommand}"/>
+                                Command="{Binding DataContext.ClearAllTextsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </StackPanel>
                 </Grid>
     </Grid>
