@@ -491,8 +491,8 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontFamily="Segoe UI"
-                               FontSize="14"
-                               Foreground="#000000"/>
+                               FontSize="11"
+                               Foreground="#777777"/>
 
                     <!-- Right text buttons -->
                     <StackPanel Orientation="Horizontal"
