@@ -32,3 +32,5 @@ BatchPasteTool.json
 # OS files
 Thumbs.db
 Desktop.ini
+BatchPasteTool-Portable/
+*.zip
