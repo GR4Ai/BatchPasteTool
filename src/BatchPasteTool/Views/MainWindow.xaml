@@ -439,7 +439,9 @@
                 <!-- ==================================================== -->
                 <!--  BOTTOM BAR  (docked bottom)                          -->
                 <!-- ==================================================== -->
-                <Grid Height="42" VerticalAlignment="Bottom" Background="White">
+                <Grid Height="42" VerticalAlignment="Bottom" Background="White"
+                      SnapsToDevicePixels="True"
+                      TextOptions.TextFormattingMode="Display">
                     <!-- Top separator -->
                     <Line VerticalAlignment="Top"
                           Stroke="#B4B4B4" StrokeThickness="1"/>

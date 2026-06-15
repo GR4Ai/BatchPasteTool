@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -38,9 +39,13 @@ public partial class MainWindow : Window
     }
 
     // ================================================================
-    //  WNDPROC HOOK — detect resize start/end to suppress layout
-    //  thrashing.  WindowChrome handles resize hit-testing natively;
-    //  this hook only watches WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE.
+    //  WNDPROC HOOK
+    //  WindowChrome handles resize hit-testing (WM_NCHITTEST).
+    //  This hook handles:
+    //    1. WM_NCCALCSIZE — force client area = window area, fixing
+    //       top/left resize flicker caused by async position+size update
+    //    2. WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE — suppress ScrollBar
+    //       layout updates during resize
     // ================================================================
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -52,9 +57,42 @@ public partial class MainWindow : Window
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
+        const int WM_NCCALCSIZE = 0x0083;
         const int WM_ENTERSIZEMOVE = 0x0231;
         const int WM_EXITSIZEMOVE = 0x0232;
 
+        // ── WM_NCCALCSIZE ──────────────────────────────────────────
+        // When resizing from the top or left edge the window position
+        // AND size change simultaneously.  If the DWM/client-area
+        // calculation drifts by even 1 frame the bottom bar appears
+        // to jump because its screen position is briefly incoherent.
+        // Forcing client = window on every NCCALCSIZE prevents the drift.
+        if (msg == WM_NCCALCSIZE)
+        {
+            if (wParam != IntPtr.Zero)          // wParam == TRUE
+            {
+                // lParam → NCCALCSIZE_PARAMS
+                //   offset  0: rgrc[0]  new client rect (output)
+                //   offset 16: rgrc[1]  old window rect
+                //   offset 32: rgrc[2]  new window rect
+                // Copy new window rect → new client rect (no non-client area).
+                Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
+                Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
+                Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
+                Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
+                handled = true;
+                return (IntPtr)0x0400; // WVR_VALIDRECTS
+            }
+            else
+            {
+                // wParam == FALSE: lParam is RECT*.  No change needed —
+                // client should already equal window for borderless.
+                handled = true;
+                return IntPtr.Zero;
+            }
+        }
+
+        // ── WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE ─────────────────────
         if (msg == WM_ENTERSIZEMOVE)
         {
             _isResizing = true;
@@ -62,12 +100,10 @@ public partial class MainWindow : Window
         else if (msg == WM_EXITSIZEMOVE)
         {
             _isResizing = false;
-            // One final sync after the resize layout settles.
             Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
                 System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
-        // Never mark handled — WindowChrome needs these messages too.
         return IntPtr.Zero;
     }
 
@@ -92,10 +128,6 @@ public partial class MainWindow : Window
 
     private void ContentScroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        // During window resize the viewport changes on every pixel.
-        // Updating the ScrollBar properties triggers extra layout passes
-        // that cascade to the bottom bar, causing visible flicker.
-        // WM_EXITSIZEMOVE does a final sync when the drag ends.
         if (!_isResizing)
             UpdateScrollbarRange();
     }
