@@ -6,7 +6,6 @@ using System.Windows.Threading;
 using BatchPasteTool.Helpers;
 using BatchPasteTool.Models;
 using BatchPasteTool.Services;
-using BatchPasteTool.Views;
 
 namespace BatchPasteTool.ViewModels;
 
@@ -598,11 +597,6 @@ public class MainViewModel : INotifyPropertyChanged
     {
         double totalH = Items.Count * (Constants.ItemH + Constants.ItemGap) + 8;
         ScrollMax = Math.Max(0, totalH);
-
-        // Immediately sync the View's ScrollBar — don't wait for a
-        // ScrollChanged event that may not fire (VirtualizingStackPanel).
-        if (_window is MainWindow mw)
-            mw.UpdateScrollbarRange();
     }
 
     // ================================================================

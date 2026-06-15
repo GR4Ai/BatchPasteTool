@@ -400,39 +400,26 @@
                 <!-- ==================================================== -->
                 <!--  ROW 1: CONTENT AREA                                 -->
                 <!-- ==================================================== -->
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="16"/>
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Scrollable items list -->
-                    <ScrollViewer x:Name="ContentScroller"
-                                  Grid.Column="0"
-                                  CanContentScroll="False"
-                                  VerticalScrollBarVisibility="Hidden"
-                                  HorizontalScrollBarVisibility="Hidden"
-                                  Background="White"
-                                  ScrollChanged="ContentScroller_ScrollChanged">
-                        <ItemsControl ItemsSource="{Binding Items}"
-                                      ItemTemplate="{StaticResource ItemTemplate}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </ScrollViewer>
-
-                    <!-- Vertical scrollbar -->
-                    <ScrollBar x:Name="VertScrollbar"
-                               Grid.Column="1"
-                               Orientation="Vertical"
-                               Width="16"
-                               SmallChange="38"
-                               LargeChange="200"
-                               Scroll="VertScrollbar_Scroll"/>
-                </Grid>
+                <ScrollViewer x:Name="ContentScroller"
+                              Grid.Row="1"
+                              CanContentScroll="False"
+                              VerticalScrollBarVisibility="Visible"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Background="White">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="ScrollBar">
+                            <Setter Property="Width" Value="16"/>
+                        </Style>
+                    </ScrollViewer.Resources>
+                    <ItemsControl ItemsSource="{Binding Items}"
+                                  ItemTemplate="{StaticResource ItemTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
 
                 <!-- ==================================================== -->
                 <!--  ROW 2: BOTTOM BAR                                   -->
