@@ -9,20 +9,20 @@ public static class Constants
     // Layout (pixels)
     public const int TitleH = 32;
     public const int BottomH = 42;
-    public const int ItemH = 38;
+    public const int ItemH = 40;
     public const int ItemGap = 4;
     public const int IconW = 24;
     public const int IconH = 24;
     public const int ScrollbarW = 16;
     public const int SliderW = 140;
     public const int SliderH = 18;
-    public const int BtnW = 48;
-    public const int BtnH = 28;
+    public const int BtnW = 56;
+    public const int BtnH = 30;
     public const int WinBtnW = 46;
     public const int WinBtnH = 32;
-    public const int EditH = 24;
-    public const int SendBtnW = 44;
-    public const int ClearBtnW = 22;
+    public const int EditH = 26;
+    public const int SendBtnW = 52;
+    public const int ClearBtnW = 24;
 
     // Window limits
     public const int MinWinW = 420;
@@ -70,8 +70,8 @@ public static class Constants
 
     // Fonts
     public const string FontFamily = "Segoe UI";
-    public const double TitleFontSize = 12.0;
-    public const double SendFontSize = 9.5;
-    public const double BtnFontSize = 9.5;
-    public const double EditFontSize = 16.0;
+    public const double TitleFontSize = 14.0;
+    public const double SendFontSize = 12.0;
+    public const double BtnFontSize = 12.0;
+    public const double EditFontSize = 18.0;
 }
