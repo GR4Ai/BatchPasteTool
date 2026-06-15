@@ -486,6 +486,14 @@
                         </Button>
                     </StackPanel>
 
+                    <!-- Branding text -->
+                    <TextBlock Text="巴巴博一 便携版 by LCL"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe UI"
+                               FontSize="11"
+                               Foreground="#777777"/>
+
                     <!-- Right text buttons -->
                     <StackPanel Orientation="Horizontal"
                                 VerticalAlignment="Center"
