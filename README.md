@@ -115,7 +115,7 @@ BatchPasteTool/
 
 ### Interface Layout
 
-![BatchPasteTool Screenshot](reference-images/screenshot.png)
+![BatchPasteTool Screenshot](reference-images/screenshot2.png)
 
 ### Controls
 

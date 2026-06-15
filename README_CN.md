@@ -116,7 +116,7 @@ BatchPasteTool/
 
 ### 界面布局
 
-![BatchPasteTool 截图](reference-images/screenshot.png)
+![BatchPasteTool 截图](reference-images/screenshot2.png)
 
 ### 控件说明
 
