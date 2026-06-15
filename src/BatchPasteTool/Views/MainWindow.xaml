@@ -192,7 +192,7 @@
         <!--  ITEM DATATEMPLATE                                           -->
         <!-- ============================================================ -->
         <DataTemplate x:Key="ItemTemplate" DataType="{x:Type vm:PasteItemViewModel}">
-            <Grid Height="40" Margin="4,0,4,2">
+            <Grid MinHeight="40" Margin="4,0,4,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="28"/>
@@ -202,14 +202,16 @@
                 <!-- Item background -->
                 <Border Grid.ColumnSpan="3" Background="#F0F0F0" CornerRadius="1"/>
 
-                <!-- TextBox -->
+                <!-- TextBox (multi-line) -->
                 <TextBox Grid.Column="0"
-                         Height="26"
-                         VerticalAlignment="Center"
-                         Margin="8,0,4,0"
+                         MinHeight="26"
+                         VerticalAlignment="Stretch"
+                         Margin="8,7,4,7"
                          Background="White"
                          FontFamily="Segoe UI"
                          FontSize="18"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
                          Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                          BorderBrush="#DDDDDD"
                          BorderThickness="1"
@@ -218,7 +220,8 @@
 
                 <!-- Clear (X) button -->
                 <Button Grid.Column="1"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="0,7,0,0"
                         Style="{StaticResource ClearBtnStyle}"
                         Content="✕"
                         Command="{Binding DataContext.ClearItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -226,7 +229,8 @@
 
                 <!-- Send button -->
                 <Button Grid.Column="2"
-                        VerticalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Margin="0,7,0,0"
                         Style="{StaticResource SendBtnStyle}"
                         Content="Send"
                         Command="{Binding DataContext.SendItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
