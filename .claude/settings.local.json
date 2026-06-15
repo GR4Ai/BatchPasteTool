@@ -28,7 +28,23 @@
       "Bash(ssh-keygen -t ed25519 -C \"hooyaoohotmail@gmail.com\" -f ~/.ssh/id_ed25519 -N \"\")",
       "Bash(ssh *)",
       "Bash(git init *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(\"C:/Program Files/GitHub CLI/gh.exe\" repo create GR4Ai/BatchPasteTool --public --source=. --remote=origin --push)",
+      "Bash(git remote *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(cmd.exe /c build.bat)",
+      "Bash(cmd.exe //c build.bat)",
+      "Bash(g++.exe -std=c++17 -O2 -s -DUNICODE -D_UNICODE -o BatchPasteTool.exe src/main.cpp -lgdiplus -lcomctl32 -luuid -static -mwindows -municode)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL available'\\)\")",
+      "Bash(python -c \"from PIL import Image; print\\('PIL available'\\)\")",
+      "Bash(powershell.exe *)",
+      "Bash(windres BatchPasteTool.rc -O coff BatchPasteTool.res)",
+      "Bash(g++.exe -std=c++17 -O2 -s -DUNICODE -D_UNICODE -o BatchPasteTool.exe src/main.cpp BatchPasteTool.res -lgdiplus -lcomctl32 -luuid -static -mwindows -municode)",
+      "Bash(xxd resources/app_icon.ico)",
+      "Bash(windres --version)",
+      "Bash(windres test.rc -O coff test.res)",
+      "Bash(objdump -x BatchPasteTool.exe)"
     ]
   }
 }

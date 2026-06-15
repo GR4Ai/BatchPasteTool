@@ -316,18 +316,20 @@
                                    VerticalAlignment="Center"
                                    Margin="0,0,8,0"/>
                         <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
                                 Command="{Binding DataContext.TogglePinCommand, RelativeSource={RelativeSource AncestorType=Window}}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource IconBtnStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding DataContext.IsPinned, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                            <Setter Property="Background" Value="#1A1A1A"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
-                                   Width="24" Height="24"/>
+                            <Image Width="24" Height="24">
+                                <Image.Style>
+                                    <Style TargetType="Image">
+                                        <Setter Property="Source" Value="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DataContext.IsPinned, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                <Setter Property="Source" Value="pack://application:,,,/BatchPasteTool;component/Resources/pin_filled.png"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
                         </Button>
                     </StackPanel>
 
