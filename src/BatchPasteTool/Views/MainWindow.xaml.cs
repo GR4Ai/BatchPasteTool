@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
+using BatchPasteTool.Helpers;
 using BatchPasteTool.ViewModels;
 
 namespace BatchPasteTool.Views;
@@ -11,6 +12,7 @@ namespace BatchPasteTool.Views;
 public partial class MainWindow : Window
 {
     private MainViewModel VM => (MainViewModel)DataContext;
+    private const int ResizeBorder = 6;
     private bool _isResizing;
 
     public MainWindow()
@@ -40,10 +42,7 @@ public partial class MainWindow : Window
 
     // ================================================================
     //  WNDPROC HOOK
-    //  WindowChrome handles resize hit-testing (WM_NCHITTEST).
-    //  This hook handles:
-    //    1. WM_NCCALCSIZE — force client area = window area, fixing
-    //       top/left resize flicker caused by async position+size update
+    //    1. WM_NCHITTEST — resize borders (8 edges/corners)
     //    2. WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE — suppress ScrollBar
     //       layout updates during resize
     // ================================================================
@@ -57,36 +56,9 @@ public partial class MainWindow : Window
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
-        const int WM_NCCALCSIZE = 0x0083;
         const int WM_ENTERSIZEMOVE = 0x0231;
         const int WM_EXITSIZEMOVE = 0x0232;
 
-        // ── WM_NCCALCSIZE ──────────────────────────────────────────
-        // Remove the non-client area entirely so the DWM does not
-        // draw any border and WPF fills the full window rect.
-        // wParam==TRUE: lParam → NCCALCSIZE_PARAMS
-        //   offset  0: rgrc[0]  new client rect (output)
-        //   offset 32: rgrc[2]  new window rect
-        // Copy window rect → client rect (no non-client area).
-        if (msg == WM_NCCALCSIZE)
-        {
-            if (wParam != IntPtr.Zero)
-            {
-                Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
-                Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
-                Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
-                Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
-                handled = true;
-                return (IntPtr)0x0400; // WVR_VALIDRECTS
-            }
-            else
-            {
-                handled = true;
-                return IntPtr.Zero;
-            }
-        }
-
-        // ── WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE ─────────────────────
         if (msg == WM_ENTERSIZEMOVE)
         {
             _isResizing = true;
@@ -96,6 +68,31 @@ public partial class MainWindow : Window
             _isResizing = false;
             Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
                 System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        if (msg == NativeMethods.WM_NCHITTEST)
+        {
+            int screenX = (int)(lParam.ToInt64() & 0xFFFF);
+            int screenY = (int)(lParam.ToInt64() >> 16);
+            Point pt = PointFromScreen(new Point(screenX, screenY));
+
+            // Resize borders (8 edges / 4 corners)
+            if (pt.X <= ResizeBorder && pt.Y <= ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTTOPLEFT); }
+            if (pt.X >= ActualWidth - ResizeBorder && pt.Y <= ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTTOPRIGHT); }
+            if (pt.X <= ResizeBorder && pt.Y >= ActualHeight - ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTBOTTOMLEFT); }
+            if (pt.X >= ActualWidth - ResizeBorder && pt.Y >= ActualHeight - ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTBOTTOMRIGHT); }
+            if (pt.X <= ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTLEFT); }
+            if (pt.X >= ActualWidth - ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTRIGHT); }
+            if (pt.Y <= ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTTOP); }
+            if (pt.Y >= ActualHeight - ResizeBorder)
+            { handled = true; return new IntPtr(NativeMethods.HTBOTTOM); }
         }
 
         return IntPtr.Zero;

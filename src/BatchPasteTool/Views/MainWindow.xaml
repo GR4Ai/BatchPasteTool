@@ -5,8 +5,8 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="False"
-        Background="White"
+        AllowsTransparency="True"
+        Background="#B4B4B4"
         ResizeMode="CanResize"
         MinWidth="420"
         MinHeight="220"
@@ -285,16 +285,18 @@
 
     <!-- ================================================================ -->
     <!--  MAIN LAYOUT                                                     -->
-    <!--  Each section uses VerticalAlignment instead of Grid.Row so      -->
-    <!--  the bottom bar positions independently — no layout cascade.     -->
     <!-- ================================================================ -->
-    <Border BorderBrush="#B4B4B4" BorderThickness="1">
-        <Grid Background="White">
+    <Grid Margin="1" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>  <!-- Title bar -->
+            <RowDefinition Height="*"/>   <!-- Content area -->
+            <RowDefinition Height="42"/>  <!-- Bottom bar -->
+        </Grid.RowDefinitions>
 
                 <!-- ==================================================== -->
-                <!--  TITLE BAR  (docked top)                              -->
+                <!--  ROW 0: TITLE BAR                                    -->
                 <!-- ==================================================== -->
-                <Grid Height="32" VerticalAlignment="Top" Background="White"
+                <Grid Grid.Row="0" Background="White"
                       MouseLeftButtonDown="TitleBar_MouseDown">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -391,9 +393,9 @@
                 </Grid>
 
                 <!-- ==================================================== -->
-                <!--  CONTENT AREA  (fills between title & bottom)         -->
+                <!--  ROW 1: CONTENT AREA                                 -->
                 <!-- ==================================================== -->
-                <Grid Margin="0,32,0,42">
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="16"/>
@@ -430,9 +432,9 @@
                 </Grid>
 
                 <!-- ==================================================== -->
-                <!--  BOTTOM BAR  (docked bottom)                          -->
+                <!--  ROW 2: BOTTOM BAR                                   -->
                 <!-- ==================================================== -->
-                <Grid Height="42" VerticalAlignment="Bottom" Background="White"
+                <Grid Grid.Row="2" Background="White"
                       SnapsToDevicePixels="True"
                       TextOptions.TextFormattingMode="Display">
                     <Grid.CacheMode>
@@ -498,6 +500,5 @@
                                 Command="{Binding DataContext.ClearAllTextsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </StackPanel>
                 </Grid>
-        </Grid>
-    </Border>
+    </Grid>
 </Window>
