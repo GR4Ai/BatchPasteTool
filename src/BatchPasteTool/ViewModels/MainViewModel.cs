@@ -322,11 +322,9 @@ public class MainViewModel : INotifyPropertyChanged
 
                 if (attached)
                     NativeMethods.AttachThreadInput(curThread, foreThread, false);
-
-                // Pump messages for 50ms so target window activates while we wait
-                PumpMessages(50);
             }
 
+            // SetForegroundWindow is synchronous — no delay needed
             _inputSim.SimulateCtrlV();
         }
         catch (Exception ex)
@@ -337,26 +335,6 @@ public class MainViewModel : INotifyPropertyChanged
         {
             _isSending = false;
         }
-    }
-
-    /// <summary>
-    /// Pump Windows messages for the given duration without returning to the caller.
-    /// Safer than Thread.Sleep (which blocks the pump) or async void (unhandled exceptions crash).
-    /// </summary>
-    private static void PumpMessages(int milliseconds)
-    {
-        var frame = new System.Windows.Threading.DispatcherFrame();
-        var timer = new System.Windows.Threading.DispatcherTimer(
-            TimeSpan.FromMilliseconds(milliseconds),
-            System.Windows.Threading.DispatcherPriority.Normal,
-            (s, e) =>
-            {
-                ((System.Windows.Threading.DispatcherTimer)s!).Stop();
-                frame.Continue = false;
-            },
-            System.Windows.Threading.Dispatcher.CurrentDispatcher);
-        timer.Start();
-        System.Windows.Threading.Dispatcher.PushFrame(frame);
     }
 
     public void SendAllItems()
@@ -382,9 +360,8 @@ public class MainViewModel : INotifyPropertyChanged
                 {
                     _clipboard.SetText(item.Text);
                     NativeMethods.SetForegroundWindow(target);
-                    PumpMessages(40);
                     _inputSim.SimulateCtrlV();
-                    PumpMessages(60);
+                    Thread.Sleep(50);  // gap between items so target can process each paste
                 }
             }
 
