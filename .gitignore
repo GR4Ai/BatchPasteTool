@@ -1,9 +1,11 @@
 # Build outputs
 *.exe
+*.dll
 *.obj
 *.res
 *.pdb
 *.ilk
+*.cache
 
 # IDE files
 .vs/
@@ -11,7 +13,17 @@
 *.user
 *.suo
 
+# WPF build
+src/BatchPasteTool/bin/
+src/BatchPasteTool/obj/
+publish/
+
 # Temporary files
 *.tmp
 *.log
 BatchPasteTool.ini
+BatchPasteTool.json
+
+# OS files
+Thumbs.db
+Desktop.ini

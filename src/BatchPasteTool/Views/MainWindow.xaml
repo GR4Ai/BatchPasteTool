@@ -1,0 +1,462 @@
+<Window x:Class="BatchPasteTool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:BatchPasteTool.Views"
+        xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
+        xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip"
+        MinWidth="420"
+        MinHeight="220"
+        Width="620"
+        Height="500"
+        WindowStartupLocation="Manual"
+        Title="BatchPasteTool"
+        Icon="pack://application:,,,/BatchPasteTool;component/Resources/app_icon.ico"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:InverseBoolConverter x:Key="InverseBool"/>
+
+        <!-- ============================================================ -->
+        <!--  WINDOW BUTTON STYLE (Min/Max/Close)                        -->
+        <!-- ============================================================ -->
+        <Style x:Key="WinBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="46"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#1A1A1A"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Close button (red hover) -->
+        <Style x:Key="CloseBtnStyle" TargetType="Button" BasedOn="{StaticResource WinBtnStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E81123"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================ -->
+        <!--  ICON BUTTON STYLE (Pin, Transparency, Add, Del, Undo)      -->
+        <!-- ============================================================ -->
+        <Style x:Key="IconBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Width="24" Height="24">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#644285F4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================ -->
+        <!--  SEND BUTTON STYLE                                           -->
+        <!-- ============================================================ -->
+        <Style x:Key="SendBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Background" Value="#326EDC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="9.5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="1"
+                                Width="44" Height="24">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1450B4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================ -->
+        <!--  CLEAR (X) BUTTON STYLE                                      -->
+        <!-- ============================================================ -->
+        <Style x:Key="ClearBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#828282"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Width="22" Height="24">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#DC3C32"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================ -->
+        <!--  BOTTOM TEXT BUTTON STYLE (Clear All, Clear Texts)          -->
+        <!-- ============================================================ -->
+        <Style x:Key="BottomTextBtnStyle" TargetType="Button">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#326EDC"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="9.5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="2"
+                                Width="48" Height="28">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#1450B4"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- ============================================================ -->
+        <!--  ITEM DATATEMPLATE                                           -->
+        <!-- ============================================================ -->
+        <DataTemplate x:Key="ItemTemplate" DataType="{x:Type vm:PasteItemViewModel}">
+            <Grid Height="38" Margin="4,0,4,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="26"/>
+                    <ColumnDefinition Width="48"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Item background -->
+                <Border Grid.ColumnSpan="3" Background="#F0F0F0" CornerRadius="1"/>
+
+                <!-- TextBox -->
+                <TextBox Grid.Column="0"
+                         Height="24"
+                         VerticalAlignment="Center"
+                         Margin="8,0,4,0"
+                         Background="White"
+                         FontFamily="Segoe UI"
+                         FontSize="16"
+                         Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                         BorderBrush="#DDDDDD"
+                         BorderThickness="1"
+                         GotFocus="ItemTextBox_GotFocus"
+                         LostFocus="ItemTextBox_LostFocus"/>
+
+                <!-- Clear (X) button -->
+                <Button Grid.Column="1"
+                        Width="22" Height="24"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource ClearBtnStyle}"
+                        Content="✕"
+                        Command="{Binding DataContext.ClearItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"/>
+
+                <!-- Send button -->
+                <Button Grid.Column="2"
+                        Width="44" Height="24"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource SendBtnStyle}"
+                        Content="Send"
+                        Command="{Binding DataContext.SendItemCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                        CommandParameter="{Binding}"/>
+
+                <!-- Separator line -->
+                <Line Grid.ColumnSpan="3"
+                      VerticalAlignment="Bottom"
+                      Stroke="#BEBEBE" StrokeThickness="1"
+                      Margin="4,0,4,-1"/>
+            </Grid>
+        </DataTemplate>
+
+        <!-- ============================================================ -->
+        <!--  SLIDER TEMPLATE                                             -->
+        <!-- ============================================================ -->
+        <ControlTemplate x:Key="CustomSliderTemplate" TargetType="Slider">
+            <Grid Height="18" Width="140">
+                <!-- Track background -->
+                <Border Height="6" CornerRadius="3" Background="#B4B4B4"
+                        VerticalAlignment="Center" Margin="6,0,6,0"/>
+                <!-- Filled track (left of thumb) -->
+                <Border Height="6" CornerRadius="3,0,0,3" Background="#4285F4"
+                        VerticalAlignment="Center" Margin="6,0,0,0"
+                        HorizontalAlignment="Left"
+                        Width="{Binding ElementName=ThumbPart, Path=Canvas.Left}"/>
+                <!-- Thumb -->
+                <Canvas>
+                    <Ellipse x:Name="ThumbPart"
+                             Width="12" Height="12"
+                             Fill="#4285F4"
+                             Stroke="#2864C8"
+                             StrokeThickness="1.5"
+                             Canvas.Top="3"/>
+                </Canvas>
+            </Grid>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <!-- ================================================================ -->
+    <!--  MAIN LAYOUT                                                     -->
+    <!-- ================================================================ -->
+    <Grid>
+        <!-- Window border -->
+        <Border BorderBrush="#B4B4B4" BorderThickness="1"
+                Background="Transparent">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="32"/>  <!-- Title bar -->
+                    <RowDefinition Height="*"/>   <!-- Content area -->
+                    <RowDefinition Height="42"/>  <!-- Bottom bar -->
+                </Grid.RowDefinitions>
+
+                <!-- ==================================================== -->
+                <!--  ROW 0: TITLE BAR                                    -->
+                <!-- ==================================================== -->
+                <Grid Grid.Row="0" Background="White"
+                      MouseLeftButtonDown="TitleBar_MouseDown">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- App name (left) -->
+                    <TextBlock Grid.Column="0"
+                               Text="BatchPasteTool"
+                               FontFamily="Segoe UI"
+                               FontSize="12"
+                               Foreground="#1A1A1A"
+                               VerticalAlignment="Center"
+                               Margin="10,0,0,0"/>
+
+                    <!-- Right-side controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <!-- Transparency slider -->
+                        <Slider x:Name="TranspSlider"
+                                Width="140" Height="18"
+                                Minimum="0" Maximum="1"
+                                Value="{Binding SliderRatio, Mode=TwoWay}"
+                                VerticalAlignment="Center"
+                                Template="{StaticResource CustomSliderTemplate}"
+                                Margin="0,0,4,0"
+                                PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"/>
+
+                        <!-- Transparency icon button -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding ToggleTransparencyCommand}"
+                                Margin="0,0,4,0"
+                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Pin button -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding TogglePinCommand}"
+                                Margin="0,0,10,0"
+                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Min button -->
+                        <Button Style="{StaticResource WinBtnStyle}"
+                                Content="─"
+                                Command="{Binding MinimizeCommand}"/>
+
+                        <!-- Max button -->
+                        <Button Style="{StaticResource WinBtnStyle}"
+                                Content="□"
+                                Command="{Binding MaximizeRestoreCommand}"/>
+
+                        <!-- Close button -->
+                        <Button Style="{StaticResource CloseBtnStyle}"
+                                Content="✕"
+                                Command="{Binding CloseCommand}"/>
+                    </StackPanel>
+
+                    <!-- Title bar bottom separator -->
+                    <Line Grid.ColumnSpan="3"
+                          VerticalAlignment="Bottom"
+                          Stroke="#C8C8C8" StrokeThickness="1"/>
+                </Grid>
+
+                <!-- ==================================================== -->
+                <!--  ROW 1: CONTENT AREA                                 -->
+                <!-- ==================================================== -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Scrollable items list -->
+                    <ScrollViewer x:Name="ContentScroller"
+                                  Grid.Column="0"
+                                  CanContentScroll="True"
+                                  VerticalScrollBarVisibility="Hidden"
+                                  HorizontalScrollBarVisibility="Hidden"
+                                  Background="White">
+                        <ItemsControl ItemsSource="{Binding Items}"
+                                      ItemTemplate="{StaticResource ItemTemplate}"
+                                      VirtualizingStackPanel.IsVirtualizing="True"
+                                      VirtualizingStackPanel.VirtualizationMode="Recycling">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Vertical scrollbar -->
+                    <ScrollBar x:Name="VertScrollbar"
+                               Grid.Column="1"
+                               Orientation="Vertical"
+                               Width="16"
+                               SmallChange="38"
+                               LargeChange="200"
+                               Scroll="VertScrollbar_Scroll"/>
+                </Grid>
+
+                <!-- ==================================================== -->
+                <!--  ROW 2: BOTTOM BAR                                   -->
+                <!-- ==================================================== -->
+                <Grid Grid.Row="2" Background="White">
+                    <!-- Top separator -->
+                    <Line VerticalAlignment="Top"
+                          Stroke="#B4B4B4" StrokeThickness="1"/>
+
+                    <!-- Left icon buttons -->
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="10,0,0,0">
+
+                        <!-- Add button -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding AddItemCommand}"
+                                Margin="0,0,8,0">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/add.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Delete button -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding DeleteItemCommand}"
+                                Margin="0,0,8,0"
+                                IsEnabled="{Binding CanDelete}">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/delete.png"
+                                   Width="24" Height="24"
+                                   Opacity="{Binding CanDelete, Converter={StaticResource InverseBool}, ConverterParameter=0.25}"/>
+                        </Button>
+
+                        <!-- Undo button -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding UndoCommand}"
+                                IsEnabled="{Binding CanUndo}">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/undo.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Right text buttons -->
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,10,0">
+
+                        <!-- Clear All button -->
+                        <Button Content="Clear All"
+                                Style="{StaticResource BottomTextBtnStyle}"
+                                Width="70"
+                                Command="{Binding ClearAllItemsCommand}"
+                                Margin="0,0,8,0"/>
+
+                        <!-- Clear Texts button -->
+                        <Button Content="Clear"
+                                Style="{StaticResource BottomTextBtnStyle}"
+                                Width="48"
+                                Command="{Binding ClearAllTextsCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
