@@ -18,7 +18,8 @@
         Icon="pack://application:,,,/BatchPasteTool;component/Resources/app_icon.ico"
         PreviewKeyDown="Window_PreviewKeyDown"
         Loaded="Window_Loaded"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Deactivated="Window_Deactivated">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>

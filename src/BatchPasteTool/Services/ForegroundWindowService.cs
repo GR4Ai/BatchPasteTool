@@ -8,6 +8,7 @@ public interface IForegroundWindowService
     IntPtr LastKnownTargetWindow { get; }
     void Start(IntPtr myWindowHandle);
     void Stop();
+    void OnWindowDeactivated();
 }
 
 public class ForegroundWindowService : IForegroundWindowService
@@ -31,6 +32,16 @@ public class ForegroundWindowService : IForegroundWindowService
     {
         _timer?.Stop();
         _timer = null;
+    }
+
+    /// <summary>
+    /// Called immediately when our window loses focus — captures the new foreground window.
+    /// </summary>
+    public void OnWindowDeactivated()
+    {
+        IntPtr fg = NativeMethods.GetForegroundWindow();
+        if (fg != IntPtr.Zero && fg != _myWindowHandle)
+            LastKnownTargetWindow = fg;
     }
 
     private void OnTick(object? sender, EventArgs e)

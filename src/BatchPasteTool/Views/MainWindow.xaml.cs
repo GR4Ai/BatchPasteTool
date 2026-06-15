@@ -35,6 +35,11 @@ public partial class MainWindow : Window
         VM.Shutdown();
     }
 
+    private void Window_Deactivated(object? sender, EventArgs e)
+    {
+        VM.OnWindowDeactivated();
+    }
+
     // ================================================================
     //  WNDPROC HOOK (Hit-testing for resize & drag)
     // ================================================================

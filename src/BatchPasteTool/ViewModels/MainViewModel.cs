@@ -286,6 +286,11 @@ public class MainViewModel : INotifyPropertyChanged
         UpdateCanStates();
     }
 
+    public void OnWindowDeactivated()
+    {
+        _foreground.OnWindowDeactivated();
+    }
+
     // ================================================================
     //  SEND / PASTE
     // ================================================================
@@ -297,12 +302,14 @@ public class MainViewModel : INotifyPropertyChanged
         // Copy to clipboard
         _clipboard.SetText(item.Text);
 
+        await Task.Delay(30);
+
         // Switch to last known foreground window
         var target = _foreground.LastKnownTargetWindow;
         if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
         {
-            NativeMethods.SetForegroundWindow(target);
-            await Task.Delay(40);
+            SwitchToWindow(target);
+            await Task.Delay(80);
         }
 
         // Simulate Ctrl+V
@@ -316,17 +323,45 @@ public class MainViewModel : INotifyPropertyChanged
             if (!string.IsNullOrEmpty(item.Text))
             {
                 _clipboard.SetText(item.Text);
+                Thread.Sleep(30);
 
                 var target = _foreground.LastKnownTargetWindow;
                 if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
                 {
-                    NativeMethods.SetForegroundWindow(target);
-                    Thread.Sleep(40);
+                    SwitchToWindow(target);
+                    Thread.Sleep(80);
                 }
 
                 _inputSim.SimulateCtrlV();
                 Thread.Sleep(80);
             }
+        }
+    }
+
+    /// <summary>
+    /// Robustly switch foreground to the target window using AttachThreadInput.
+    /// </summary>
+    private static void SwitchToWindow(IntPtr target)
+    {
+        // AttachThreadInput trick: attach our thread to the foreground thread
+        // so SetForegroundWindow is allowed to succeed.
+        IntPtr fg = NativeMethods.GetForegroundWindow();
+        uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
+        uint curThread = NativeMethods.GetCurrentThreadId();
+
+        bool attached = false;
+        if (foreThread != curThread)
+        {
+            attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
+        }
+
+        NativeMethods.BringWindowToTop(target);
+        NativeMethods.SetForegroundWindow(target);
+        NativeMethods.SetActiveWindow(target);
+
+        if (attached)
+        {
+            NativeMethods.AttachThreadInput(curThread, foreThread, false);
         }
     }
 
