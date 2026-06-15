@@ -18,9 +18,14 @@ src/BatchPasteTool/bin/
 src/BatchPasteTool/obj/
 publish/
 
+# Tool build outputs
+tools/*/bin/
+tools/*/obj/
+
 # Temporary files
 *.tmp
 *.log
+*.csx
 BatchPasteTool.ini
 BatchPasteTool.json
 
