@@ -32,11 +32,13 @@ cd src/BatchPasteTool
 dotnet build -c Release
 ```
 
-#### Self-contained Publish (no .NET runtime needed)
+#### Self-contained Single-File Publish (no .NET runtime needed)
 
 ```bash
-dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 ```
+
+Produces a single `BatchPasteTool.exe` (~160 MB) that runs on any Windows x64 machine.
 
 ## Project Structure
 
