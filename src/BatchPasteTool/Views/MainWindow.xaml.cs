@@ -27,11 +27,12 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         VM.Initialize(this);
-        // Defer scrollbar update until well after layout completes.
-        // VirtualizingStackPanel doesn't report correct ExtentHeight
-        // at Loaded priority; Background gives it time to measure.
-        Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
-            System.Windows.Threading.DispatcherPriority.Background);
+
+        // Force a full layout pass so the ScrollViewer measures its content
+        // and enables scrolling. Without this, ExtentHeight stays at 0 and
+        // both mouse wheel and scrollbar drag are dead until an item is added.
+        ContentScroller.UpdateLayout();
+        UpdateScrollbarRange();
     }
 
     private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
