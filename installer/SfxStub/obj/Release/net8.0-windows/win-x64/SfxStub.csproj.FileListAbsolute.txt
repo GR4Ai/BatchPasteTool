@@ -1,0 +1,12 @@
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\SfxStub.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\SfxStub.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\SfxStub.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\SfxStub.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\bin\Release\net8.0-windows\win-x64\BatchPasteTool-Setup.exe
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\bin\Release\net8.0-windows\win-x64\BatchPasteTool-Setup.deps.json
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\bin\Release\net8.0-windows\win-x64\BatchPasteTool-Setup.runtimeconfig.json
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\bin\Release\net8.0-windows\win-x64\BatchPasteTool-Setup.dll
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\BatchPasteTool-Setup.dll
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\refint\BatchPasteTool-Setup.dll
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\SfxStub.genruntimeconfig.cache
+C:\Users\Administrator\Desktop\BatchPasteTool\installer\SfxStub\obj\Release\net8.0-windows\win-x64\ref\BatchPasteTool-Setup.dll

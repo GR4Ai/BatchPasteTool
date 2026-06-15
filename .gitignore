@@ -34,3 +34,5 @@ Thumbs.db
 Desktop.ini
 BatchPasteTool-Portable/
 *.zip
+installer/BatchPasteTool-Setup.exe
+publish-installer/
