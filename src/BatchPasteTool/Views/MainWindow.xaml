@@ -4,10 +4,10 @@
         xmlns:local="clr-namespace:BatchPasteTool.Views"
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="#B4B4B4"
-        ResizeMode="CanResize"
+        Background="White"
+        ResizeMode="CanResizeWithGrip"
         MinWidth="420"
         MinHeight="220"
         Width="620"
@@ -20,6 +20,13 @@
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         Deactivated="Window_Deactivated">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0"
+                            ResizeBorderThickness="6"
+                            GlassFrameThickness="0"
+                            CornerRadius="0"
+                            UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
@@ -286,7 +293,8 @@
     <!-- ================================================================ -->
     <!--  MAIN LAYOUT                                                     -->
     <!-- ================================================================ -->
-    <Grid Margin="1" Background="White">
+    <Border BorderBrush="#B4B4B4" BorderThickness="1">
+        <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="32"/>  <!-- Title bar -->
             <RowDefinition Height="*"/>   <!-- Content area -->
@@ -493,5 +501,6 @@
                                 Command="{Binding DataContext.ClearAllTextsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </StackPanel>
                 </Grid>
-    </Grid>
+        </Grid>
+    </Border>
 </Window>
