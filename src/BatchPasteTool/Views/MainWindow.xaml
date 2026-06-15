@@ -303,35 +303,35 @@
                     <StackPanel Grid.Column="2" Orientation="Horizontal"
                                 VerticalAlignment="Center">
 
-                        <!-- Transparency slider -->
+                        <!-- Pin button (left) -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding TogglePinCommand}"
+                                Margin="0,0,6,0"
+                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Transparency icon button (middle) -->
+                        <Button Width="24" Height="24"
+                                Style="{StaticResource IconBtnStyle}"
+                                Command="{Binding ToggleTransparencyCommand}"
+                                Margin="0,0,6,0"
+                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
+                                   Width="24" Height="24"/>
+                        </Button>
+
+                        <!-- Transparency slider (right) -->
                         <Slider x:Name="TranspSlider"
                                 Width="140" Height="18"
                                 Minimum="0" Maximum="1"
                                 Value="{Binding SliderRatio, Mode=TwoWay}"
                                 VerticalAlignment="Center"
                                 Template="{StaticResource CustomSliderTemplate}"
-                                Margin="0,0,4,0"
-                                PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"/>
-
-                        <!-- Transparency icon button -->
-                        <Button Width="24" Height="24"
-                                Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding ToggleTransparencyCommand}"
-                                Margin="0,0,4,0"
-                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
-                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
-                                   Width="24" Height="24"/>
-                        </Button>
-
-                        <!-- Pin button -->
-                        <Button Width="24" Height="24"
-                                Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding TogglePinCommand}"
                                 Margin="0,0,10,0"
-                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
-                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
-                                   Width="24" Height="24"/>
-                        </Button>
+                                PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"/>
 
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"
