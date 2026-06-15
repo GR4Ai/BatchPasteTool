@@ -357,18 +357,33 @@
 
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"
-                                Content="─"
-                                Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <Path Data="M 14,16 L 32,16"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.2" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Width="18" Height="8"/>
+                        </Button>
 
                         <!-- Max button -->
                         <Button Style="{StaticResource WinBtnStyle}"
-                                Content="□"
-                                Command="{Binding DataContext.MaximizeRestoreCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                Command="{Binding DataContext.MaximizeRestoreCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <Path Data="M 14,12 L 32,12 L 32,22 L 14,22 Z"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.2" StrokeLineJoin="Round"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Width="18" Height="10"/>
+                        </Button>
 
                         <!-- Close button -->
                         <Button Style="{StaticResource CloseBtnStyle}"
-                                Content="✕"
-                                Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <Path Data="M 15,13 L 31,23 M 31,13 L 15,23"
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                  StrokeThickness="1.2" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  Width="18" Height="10"/>
+                        </Button>
                     </StackPanel>
 
                     <!-- Title bar bottom separator -->
