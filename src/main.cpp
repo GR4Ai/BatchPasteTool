@@ -1427,6 +1427,23 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         }
         return 0;
 
+    // ---- Remove standard non-client area (caption) ----
+    case WM_NCCALCSIZE:
+    {
+        if (wp == TRUE) {
+            // Remove the standard caption area; keep thin border for resizing
+            NCCALCSIZE_PARAMS* p = (NCCALCSIZE_PARAMS*)lp;
+            DefWindowProcW(hwnd, msg, wp, lp);
+            // Shrink the non-client border to 1px on each side (minimum for hit-testing)
+            p->rgrc[0].left   += 3;
+            p->rgrc[0].right  -= 3;
+            p->rgrc[0].top    += 3;
+            p->rgrc[0].bottom -= 3;
+            return 0;
+        }
+        return DefWindowProcW(hwnd, msg, wp, lp);
+    }
+
     // ---- Sizing ----
     case WM_SIZE:
         UpdateLayout();
@@ -1710,11 +1727,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
 
     RegisterClassExW(&wc);
 
-    // Create window (borderless but resizable, with custom title bar)
+    // Create window (no standard title bar — custom title bar drawn in client area)
     HWND hwnd = CreateWindowExW(
         WS_EX_APPWINDOW | WS_EX_CONTROLPARENT,
         APP_CLASS, APP_NAME,
-        WS_OVERLAPPED | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+        WS_POPUP | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
         CW_USEDEFAULT, CW_USEDEFAULT, 620, 500,
         nullptr, nullptr, hInstance, nullptr);
 
