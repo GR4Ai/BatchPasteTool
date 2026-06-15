@@ -25,6 +25,7 @@
 #include <commctrl.h>
 #include <gdiplus.h>
 #include <shlobj.h>
+#include "resource.h"
 #include <algorithm>
 #include <fstream>
 #include <stack>
@@ -269,7 +270,7 @@ void LoadAllPngs() {
     LoadPngFile(L"transparency.png",   &g_pBmpTransp);
     LoadPngFile(L"undo.png",           &g_pBmpUndo);
     LoadPngFile(L"slider_bg.png",      &g_pBmpSliderBg);
-    LoadPngFile(L"app_icon.png",       &g_pBmpAppIcon);
+    LoadPngFile(L"图片8.png",       &g_pBmpAppIcon);
 }
 
 void FreeAllPngs() {
@@ -1703,9 +1704,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int nCmdShow) {
     wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
     wc.lpszClassName = APP_CLASS;
 
-    // Try to load icon from resources; if not available, use default
-    wc.hIcon = LoadIconW(hInstance, L"APP_ICON");
-    if (!wc.hIcon) wc.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
+    // Load icon from embedded resource
+    wc.hIcon   = LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP_ICON));
+    wc.hIconSm = LoadIconW(hInstance, MAKEINTRESOURCEW(IDI_APP_ICON));
 
     RegisterClassExW(&wc);
 

@@ -1,11 +1,12 @@
 #include <windows.h>
 #include "src/resource.h"
 
-// Application icon (Will be loaded from resources/ at runtime via GDI+)
-// IDI_APP_ICON  ICON  "resources/app_icon.png"
+// Application icon
+IDI_APP_ICON  ICON  "resources/app_icon.ico"
 
 // DPI awareness and visual styles manifest
-IDR_MANIFEST 24 1 "BatchPasteTool.manifest"
+#define RT_MANIFEST 24
+IDR_MANIFEST RT_MANIFEST "BatchPasteTool.manifest"
 
 // Version info
 VS_VERSION_INFO VERSIONINFO
