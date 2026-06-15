@@ -27,7 +27,11 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         VM.Initialize(this);
-        UpdateScrollbarRange();
+        // Defer scrollbar update until after layout pass completes.
+        // At Loaded time the ItemsControl hasn't been measured yet,
+        // so ExtentHeight == ViewportHeight and the scrollbar is stuck at 0.
+        Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
+            System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
