@@ -301,39 +301,57 @@ public class MainViewModel : INotifyPropertyChanged
 
         _clipboard.SetText(item.Text);
 
-        // Use PostMessage to send Ctrl+V directly to target — no focus switch needed
         var target = _foreground.LastKnownTargetWindow;
         if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
         {
-            _inputSim.PostCtrlV(target);
+            // AttachThreadInput to make SetForegroundWindow succeed instantly
+            IntPtr fg = NativeMethods.GetForegroundWindow();
+            uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
+            uint curThread = NativeMethods.GetCurrentThreadId();
+
+            bool attached = false;
+            if (foreThread != 0 && foreThread != curThread)
+                attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
+
+            NativeMethods.SetForegroundWindow(target);
+
+            if (attached)
+                NativeMethods.AttachThreadInput(curThread, foreThread, false);
+
+            // Small sleep to let target activate before sending keys
+            Thread.Sleep(30);
         }
-        else
-        {
-            // Fallback: use SendInput (requires foreground window)
-            _inputSim.SimulateCtrlV();
-        }
+
+        _inputSim.SimulateCtrlV();
     }
 
     public void SendAllItems()
     {
         var target = _foreground.LastKnownTargetWindow;
-        bool hasTarget = target != IntPtr.Zero && NativeMethods.IsWindow(target);
+        if (target == IntPtr.Zero || !NativeMethods.IsWindow(target)) return;
+
+        IntPtr fg = NativeMethods.GetForegroundWindow();
+        uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
+        uint curThread = NativeMethods.GetCurrentThreadId();
+
+        bool attached = false;
+        if (foreThread != 0 && foreThread != curThread)
+            attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
 
         foreach (var item in Items)
         {
             if (!string.IsNullOrEmpty(item.Text))
             {
                 _clipboard.SetText(item.Text);
-                Thread.Sleep(20);
-
-                if (hasTarget)
-                    _inputSim.PostCtrlV(target);
-                else
-                    _inputSim.SimulateCtrlV();
-
+                NativeMethods.SetForegroundWindow(target);
+                Thread.Sleep(30);
+                _inputSim.SimulateCtrlV();
                 Thread.Sleep(60);
             }
         }
+
+        if (attached)
+            NativeMethods.AttachThreadInput(curThread, foreThread, false);
     }
 
     // ================================================================
