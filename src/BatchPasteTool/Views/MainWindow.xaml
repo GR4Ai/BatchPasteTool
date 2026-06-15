@@ -409,19 +409,16 @@
                     <!-- Scrollable items list -->
                     <ScrollViewer x:Name="ContentScroller"
                                   Grid.Column="0"
-                                  CanContentScroll="True"
+                                  CanContentScroll="False"
                                   VerticalScrollBarVisibility="Hidden"
                                   HorizontalScrollBarVisibility="Hidden"
                                   Background="White"
-                                  ScrollChanged="ContentScroller_ScrollChanged"
-                                  PreviewMouseWheel="ContentScroller_PreviewMouseWheel">
+                                  ScrollChanged="ContentScroller_ScrollChanged">
                         <ItemsControl ItemsSource="{Binding Items}"
-                                      ItemTemplate="{StaticResource ItemTemplate}"
-                                      VirtualizingStackPanel.IsVirtualizing="True"
-                                      VirtualizingStackPanel.VirtualizationMode="Recycling">
+                                      ItemTemplate="{StaticResource ItemTemplate}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel/>
+                                    <StackPanel/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>

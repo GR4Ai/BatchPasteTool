@@ -129,23 +129,6 @@ public partial class MainWindow : Window
             UpdateScrollbarRange();
     }
 
-    /// <summary>
-    /// Some systems / scenarios the VirtualizingStackPanel IScrollInfo
-    /// doesn't forward the mouse wheel to the ScrollViewer.  Handle it
-    /// ourselves so the wheel always scrolls the list.
-    /// </summary>
-    private void ContentScroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        double delta = e.Delta > 0 ? -42 : 42; // one item row per tick
-        double newOffset = ContentScroller.VerticalOffset + delta;
-        double max = ContentScroller.ScrollableHeight;
-        if (max <= 0) max = VertScrollbar.Maximum;
-        newOffset = Math.Max(0, Math.Min(newOffset, max));
-        ContentScroller.ScrollToVerticalOffset(newOffset);
-        UpdateScrollbarRange();
-        e.Handled = true;
-    }
-
     public void UpdateScrollbarRange()
     {
         // VirtualizingStackPanel may report ExtentHeight == 0 or == ViewportHeight
