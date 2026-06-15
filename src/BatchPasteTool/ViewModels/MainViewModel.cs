@@ -302,17 +302,11 @@ public class MainViewModel : INotifyPropertyChanged
         // Copy to clipboard
         _clipboard.SetText(item.Text);
 
+        // Small delay to ensure clipboard has the data
         await Task.Delay(30);
 
-        // Switch to last known foreground window
-        var target = _foreground.LastKnownTargetWindow;
-        if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
-        {
-            SwitchToWindow(target);
-            await Task.Delay(80);
-        }
-
-        // Simulate Ctrl+V
+        // Simulate Ctrl+V — target window still has focus since
+        // WM_MOUSEACTIVATE prevented our window from activating.
         _inputSim.SimulateCtrlV();
     }
 

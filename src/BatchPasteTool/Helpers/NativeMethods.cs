@@ -93,6 +93,8 @@ public static class NativeMethods
 
     // ---- WM constants ----
     public const int WM_NCHITTEST = 0x0084;
+    public const int WM_MOUSEACTIVATE = 0x0021;
+    public const int MA_NOACTIVATE = 3;
 
     // Hit-test return codes
     public const int HTCLIENT = 1;
