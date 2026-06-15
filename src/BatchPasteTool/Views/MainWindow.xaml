@@ -241,27 +241,45 @@
         </DataTemplate>
 
         <!-- ============================================================ -->
-        <!--  SLIDER TEMPLATE                                             -->
+        <!--  SLIDER TEMPLATE  (proper WPF Track/Thumb parts)             -->
         <!-- ============================================================ -->
         <ControlTemplate x:Key="CustomSliderTemplate" TargetType="Slider">
             <Grid Height="18" Width="140">
-                <!-- Track background -->
-                <Border Height="6" CornerRadius="3" Background="#B4B4B4"
-                        VerticalAlignment="Center" Margin="6,0,6,0"/>
-                <!-- Filled track (left of thumb) -->
-                <Border Height="6" CornerRadius="3,0,0,3" Background="#4285F4"
-                        VerticalAlignment="Center" Margin="6,0,0,0"
-                        HorizontalAlignment="Left"
-                        Width="{Binding ElementName=ThumbPart, Path=Canvas.Left}"/>
-                <!-- Thumb -->
-                <Canvas>
-                    <Ellipse x:Name="ThumbPart"
-                             Width="12" Height="12"
-                             Fill="#4285F4"
-                             Stroke="#2864C8"
-                             StrokeThickness="1.5"
-                             Canvas.Top="3"/>
-                </Canvas>
+                <Track x:Name="PART_Track" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Command="Slider.DecreaseLarge">
+                            <RepeatButton.Template>
+                                <ControlTemplate TargetType="RepeatButton">
+                                    <Border Height="6" CornerRadius="3,0,0,3" Background="#4285F4"
+                                            Margin="6,0,0,0"/>
+                                </ControlTemplate>
+                            </RepeatButton.Template>
+                        </RepeatButton>
+                    </Track.DecreaseRepeatButton>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Command="Slider.IncreaseLarge">
+                            <RepeatButton.Template>
+                                <ControlTemplate TargetType="RepeatButton">
+                                    <Border Height="6" CornerRadius="0,3,3,0" Background="#B4B4B4"
+                                            Margin="0,0,6,0"/>
+                                </ControlTemplate>
+                            </RepeatButton.Template>
+                        </RepeatButton>
+                    </Track.IncreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb x:Name="PART_Thumb" Width="12" Height="12"
+                               Cursor="Hand">
+                            <Thumb.Template>
+                                <ControlTemplate TargetType="Thumb">
+                                    <Ellipse Width="12" Height="12"
+                                             Fill="#4285F4"
+                                             Stroke="#2864C8"
+                                             StrokeThickness="1.5"/>
+                                </ControlTemplate>
+                            </Thumb.Template>
+                        </Thumb>
+                    </Track.Thumb>
+                </Track>
             </Grid>
         </ControlTemplate>
     </Window.Resources>
