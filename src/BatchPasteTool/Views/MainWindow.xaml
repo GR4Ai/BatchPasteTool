@@ -290,40 +290,40 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- App name (left) -->
-                    <TextBlock Grid.Column="0"
-                               Text="BatchPasteTool"
-                               FontFamily="Segoe UI"
-                               FontSize="12"
-                               Foreground="#1A1A1A"
-                               VerticalAlignment="Center"
-                               Margin="10,0,0,0"/>
-
-                    <!-- Right-side controls -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal"
-                                VerticalAlignment="Center">
-
-                        <!-- Pin button (left) -->
+                    <!-- LEFT: App name + Pin button -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="10,0,0,0">
+                        <TextBlock Text="BatchPasteTool"
+                                   FontFamily="Segoe UI"
+                                   FontSize="12"
+                                   Foreground="#1A1A1A"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"/>
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
                                 Command="{Binding TogglePinCommand}"
-                                Margin="0,0,6,0"
                                 PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
                                    Width="24" Height="24"/>
                         </Button>
+                    </StackPanel>
 
-                        <!-- Transparency icon button (middle) -->
-                        <Button Width="24" Height="24"
-                                Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding ToggleTransparencyCommand}"
-                                Margin="0,0,6,0"
-                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
-                            <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
-                                   Width="24" Height="24"/>
-                        </Button>
+                    <!-- MIDDLE: Transparency icon -->
+                    <Button Grid.Column="1" Width="24" Height="24"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource IconBtnStyle}"
+                            Command="{Binding ToggleTransparencyCommand}"
+                            PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                        <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
+                               Width="24" Height="24"/>
+                    </Button>
 
-                        <!-- Transparency slider (right) -->
+                    <!-- RIGHT: Transparency slider + Window buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                        <!-- Transparency slider -->
                         <Slider x:Name="TranspSlider"
                                 Width="140" Height="18"
                                 Minimum="0" Maximum="1"

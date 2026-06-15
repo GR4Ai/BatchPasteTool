@@ -97,13 +97,19 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Quick check if a client point is over a title bar interactive element.
-    /// We approximate — the right side of the title bar with buttons.
+    /// Elements are now spread across the title bar: pin on left, transparency in middle,
+    /// slider + window buttons on right.
     /// </summary>
     private static bool IsOverInteractiveTitleElement(Point pt)
     {
-        // Right side: window buttons (3 × 46px) + pin (24) + transparency (24) + slider (140) + gaps
-        double interactiveStart = 3 * Constants.WinBtnW + 2 * Constants.IconW + Constants.SliderW + 40;
-        return pt.X > (620 - interactiveStart); // rough check — any point near right side
+        // Left side: pin button area (name text ~140px + pin 24px)
+        if (pt.X >= 140 && pt.X <= 174 && pt.Y < Constants.TitleH) return true;
+        // Middle: transparency icon (centered in the title bar, ~24px at center)
+        double midCenter = 620 / 2.0;
+        if (pt.X >= midCenter - 16 && pt.X <= midCenter + 16 && pt.Y < Constants.TitleH) return true;
+        // Right side: slider (140px) + window buttons (3 × 46px)
+        if (pt.X > (620 - 3 * Constants.WinBtnW - Constants.SliderW - 30)) return true;
+        return false;
     }
 
     // ================================================================
