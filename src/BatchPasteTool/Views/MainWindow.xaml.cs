@@ -58,7 +58,6 @@ public partial class MainWindow : Window
     {
         const int WM_ENTERSIZEMOVE = 0x0231;
         const int WM_EXITSIZEMOVE = 0x0232;
-        const int WM_NCCALCSIZE = 0x0083;
 
         if (msg == WM_ENTERSIZEMOVE)
         {
@@ -69,17 +68,6 @@ public partial class MainWindow : Window
             _isResizing = false;
             Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
                 System.Windows.Threading.DispatcherPriority.Loaded);
-        }
-
-        // ── WM_NCCALCSIZE ──────────────────────────────────────────
-        // Remove the non-client border rendered by WS_THICKFRAME.
-        // Return 0 without modifying NCCALCSIZE_PARAMS — this tells
-        // Windows to use rgrc[0] (full window rect) as client rect,
-        // effectively zeroing out the NC area.
-        if (msg == WM_NCCALCSIZE && wParam != IntPtr.Zero)
-        {
-            handled = true;
-            return IntPtr.Zero;
         }
 
         if (msg == NativeMethods.WM_NCHITTEST)
