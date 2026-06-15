@@ -491,7 +491,7 @@
                                HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontFamily="Segoe UI"
-                               FontSize="11"
+                               FontSize="13"
                                Foreground="#777777"/>
 
                     <!-- Right text buttons -->
