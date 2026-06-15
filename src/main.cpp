@@ -1428,22 +1428,9 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
         }
         return 0;
 
-    // ---- Remove standard non-client area (caption) ----
-    case WM_NCCALCSIZE:
-    {
-        if (wp == TRUE) {
-            // Remove the standard caption area; keep thin border for resizing
-            NCCALCSIZE_PARAMS* p = (NCCALCSIZE_PARAMS*)lp;
-            DefWindowProcW(hwnd, msg, wp, lp);
-            // Shrink the non-client border to 1px on each side (minimum for hit-testing)
-            p->rgrc[0].left   += 3;
-            p->rgrc[0].right  -= 3;
-            p->rgrc[0].top    += 3;
-            p->rgrc[0].bottom -= 3;
-            return 0;
-        }
-        return DefWindowProcW(hwnd, msg, wp, lp);
-    }
+    // ---- Suppress system-drawn non-client area ----
+    case WM_NCPAINT:
+        return 0;  // We paint everything ourselves (custom title bar + border)
 
     // ---- Sizing ----
     case WM_SIZE:
