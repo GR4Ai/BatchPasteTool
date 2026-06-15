@@ -43,7 +43,7 @@
 #define APP_CLASS      L"BatchPasteToolWnd"
 #define CONFIG_FILE    L"BatchPasteTool.ini"
 
-#define TITLE_H        36     // Title bar height
+#define TITLE_H        32     // Title bar height (Windows 10 style)
 #define BOTTOM_H       42     // Bottom bar height
 #define ITEM_H         38     // Per-item height
 #define ITEM_GAP       4      // Gap between items
@@ -54,8 +54,8 @@
 #define SLIDER_H       18     // Transparency slider height
 #define BTN_W          48     // Text button width in bottom bar
 #define BTN_H          28     // Text button height
-#define WINBTN_W       36     // Window control button width
-#define WINBTN_H       28     // Window control button height
+#define WINBTN_W       46     // Window control button width (Win10)
+#define WINBTN_H       32     // Window control button height (= TITLE_H)
 
 #define MIN_WIN_W      420    // Minimum window width
 #define MIN_WIN_H      220    // Minimum window height
@@ -70,7 +70,7 @@
 //  COLORS  (White / Light theme)
 // ============================================================================
 
-#define RGB_TITLE_BG       RGB(240, 240, 240)   // Title bar: light gray
+#define RGB_TITLE_BG       RGB(255, 255, 255)   // Title bar: white (Win10 style)
 #define RGB_TITLE_TEXT     RGB( 32,  32,  32)   // Title text: dark
 #define RGB_BOTTOM_BG      RGB(240, 240, 240)   // Bottom bar: light gray
 #define RGB_CONTENT_BG     RGB(255, 255, 255)   // Content area: white
@@ -286,16 +286,16 @@ void FreeAllPngs() {
 }
 
 void InitGdiPlusCache() {
-    g_pBrTitleBg    = new Gdiplus::SolidBrush(Gdiplus::Color(240, 240, 240));  // light gray
+    g_pBrTitleBg    = new Gdiplus::SolidBrush(Gdiplus::Color(255, 255, 255));  // white (Win10)
     g_pBrContentBg  = new Gdiplus::SolidBrush(Gdiplus::Color(255, 255, 255));  // white
     g_pBrItemBg     = new Gdiplus::SolidBrush(Gdiplus::Color(248, 248, 248));  // off-white
     g_pBrBtnText    = new Gdiplus::SolidBrush(Gdiplus::Color( 60,  60,  60));  // dark gray
-    g_pBrBtnHover   = new Gdiplus::SolidBrush(Gdiplus::Color(200, 220, 240));  // light blue
-    g_pBrCloseHov   = new Gdiplus::SolidBrush(Gdiplus::Color(232,  78,  64));  // red
+    g_pBrBtnHover   = new Gdiplus::SolidBrush(Gdiplus::Color(224, 224, 224));  // light gray (Win10 min/max hover)
+    g_pBrCloseHov   = new Gdiplus::SolidBrush(Gdiplus::Color(232,  17,  35));  // red (Win10 #E81123)
     g_pBrSliderFill = new Gdiplus::SolidBrush(Gdiplus::Color( 66, 133, 244));  // blue
     g_pBrSliderEmp  = new Gdiplus::SolidBrush(Gdiplus::Color(230, 230, 230));  // light gray
     g_pBrSliderThumb= new Gdiplus::SolidBrush(Gdiplus::Color( 66, 133, 244));  // blue thumb
-    g_pFontTitle    = new Gdiplus::Font(L"Segoe UI", 10.0f, Gdiplus::FontStyleBold);
+    g_pFontTitle    = new Gdiplus::Font(L"Segoe UI", 12.0f, Gdiplus::FontStyleRegular);  // Win10 style
     g_pFontBtn      = new Gdiplus::Font(L"Segoe UI", 9.0f);
 }
 
@@ -330,10 +330,10 @@ void UpdateLayout() {
     // Name: left side of title bar
     g_rcName       = {10, 0, 180, TITLE_H};
 
-    // Window control buttons: right-aligned
-    g_rcCloseBtn   = {w - WINBTN_W, 4, w, TITLE_H};
-    g_rcMaxBtn     = {w - WINBTN_W * 2, 4, w - WINBTN_W, TITLE_H};
-    g_rcMinBtn     = {w - WINBTN_W * 3, 4, w - WINBTN_W * 2, TITLE_H};
+    // Window control buttons: right-aligned, full title bar height (Win10 style)
+    g_rcCloseBtn   = {w - WINBTN_W, 0, w, TITLE_H};
+    g_rcMaxBtn     = {w - WINBTN_W * 2, 0, w - WINBTN_W, TITLE_H};
+    g_rcMinBtn     = {w - WINBTN_W * 3, 0, w - WINBTN_W * 2, TITLE_H};
 
     // Pin button
     g_rcPinBtn     = {w - WINBTN_W * 3 - ICON_W - 10, (TITLE_H - ICON_H) / 2,
@@ -985,13 +985,12 @@ void ApplyPin() {
 // ============================================================================
 
 void DrawTitleBar(Gdiplus::Graphics& g) {
-    // Background
+    // Background — pure white (Win10 style)
     g.FillRectangle(g_pBrTitleBg, ToGdipRect(g_rcTitleBar));
 
-    // App name — darker and slightly larger
-    Gdiplus::Font titleFont(L"Segoe UI", 11.0f, Gdiplus::FontStyleBold);
-    Gdiplus::SolidBrush textBr(Gdiplus::Color(32, 32, 32));
-    g.DrawString(APP_NAME, -1, &titleFont,
+    // App name — Segoe UI 12px regular, dark gray (Win10 style)
+    Gdiplus::SolidBrush textBr(Gdiplus::Color(26, 26, 26));
+    g.DrawString(APP_NAME, -1, g_pFontTitle,
                  Gdiplus::RectF(Gdiplus::REAL(g_rcName.left), Gdiplus::REAL(g_rcName.top),
                                 Gdiplus::REAL(g_rcName.right - g_rcName.left),
                                 Gdiplus::REAL(g_rcName.bottom - g_rcName.top)),
@@ -1001,11 +1000,11 @@ void DrawTitleBar(Gdiplus::Graphics& g) {
     if (g_pBmpPin) {
         g.DrawImage(g_pBmpPin, Gdiplus::Rect(g_rcPinBtn.left, g_rcPinBtn.top, ICON_W, ICON_H));
         if (g_bPinned) {
-            Gdiplus::Pen pinPen(Gdiplus::Color(66, 133, 244), 3.0f);
-            g.DrawRectangle(&pinPen, Gdiplus::Rect(g_rcPinBtn.left + 1, g_rcPinBtn.top + 1, ICON_W - 3, ICON_H - 3));
+            Gdiplus::Pen pinPen(Gdiplus::Color(66, 133, 244), 2.0f);
+            g.DrawRectangle(&pinPen, Gdiplus::Rect(g_rcPinBtn.left + 1, g_rcPinBtn.top + 1, ICON_W - 2, ICON_H - 2));
         }
         if (g_bPinHover) {
-            Gdiplus::SolidBrush hov(Gdiplus::Color(120, 66, 133, 244));
+            Gdiplus::SolidBrush hov(Gdiplus::Color(100, 66, 133, 244));
             g.FillRectangle(&hov, Gdiplus::Rect(g_rcPinBtn.left, g_rcPinBtn.top, ICON_W, ICON_H));
         }
     }
@@ -1014,55 +1013,46 @@ void DrawTitleBar(Gdiplus::Graphics& g) {
     if (g_pBmpTransp) {
         g.DrawImage(g_pBmpTransp, Gdiplus::Rect(g_rcTranspIcon.left, g_rcTranspIcon.top, ICON_W, ICON_H));
         if (g_bTranspHover) {
-            Gdiplus::SolidBrush hov(Gdiplus::Color(120, 66, 133, 244));
+            Gdiplus::SolidBrush hov(Gdiplus::Color(100, 66, 133, 244));
             g.FillRectangle(&hov, Gdiplus::Rect(g_rcTranspIcon.left, g_rcTranspIcon.top, ICON_W, ICON_H));
         }
     }
 
-    // Window control buttons — darker + thicker lines
-    Gdiplus::Pen btnPen(Gdiplus::Color(50, 50, 50), 2.0f);
-    Gdiplus::Pen closePen(Gdiplus::Color(50, 50, 50), 2.2f);
+    // ---- Window control buttons (Windows 10 style) ----
+    Gdiplus::Pen icoPen(Gdiplus::Color(26, 26, 26), 1.2f);       // dark icons
+    Gdiplus::Pen icoWhite(Gdiplus::Color(255, 255, 255), 1.2f);  // white close X on hover
 
-    // Min button
+    // Min button — horizontal line
     {
-        int cx = (INT)(g_rcMinBtn.left + (WINBTN_W - 12) / 2);
-        int cy = (INT)(g_rcMinBtn.top + (WINBTN_H - 4) / 2 + 1);
+        int lx = (INT)(g_rcMinBtn.left + (WINBTN_W - 10) / 2);
+        int ly = (INT)(g_rcMinBtn.top + WINBTN_H / 2);
         if (g_bMinHover) {
             g.FillRectangle(g_pBrBtnHover, Gdiplus::Rect(g_rcMinBtn.left, g_rcMinBtn.top, WINBTN_W, WINBTN_H));
-            Gdiplus::Pen hovMinPen(Gdiplus::Color(50, 50, 50), 2.0f);
-            g.DrawLine(&hovMinPen, cx, cy + 5, cx + 12, cy + 5);
-        } else {
-            g.DrawLine(&btnPen, cx, cy + 5, cx + 12, cy + 5);
         }
+        g.DrawLine(&icoPen, lx, ly, lx + 10, ly);
     }
 
-    // Max button
+    // Max button — hollow rectangle
     {
-        int cx = (INT)(g_rcMaxBtn.left + (WINBTN_W - 10) / 2);
-        int cy = (INT)(g_rcMaxBtn.top + (WINBTN_H - 10) / 2);
+        int mx = (INT)(g_rcMaxBtn.left + (WINBTN_W - 10) / 2);
+        int my = (INT)(g_rcMaxBtn.top + (WINBTN_H - 10) / 2);
         if (g_bMaxHover) {
             g.FillRectangle(g_pBrBtnHover, Gdiplus::Rect(g_rcMaxBtn.left, g_rcMaxBtn.top, WINBTN_W, WINBTN_H));
-            Gdiplus::Pen hovMaxPen(Gdiplus::Color(50, 50, 50), 2.0f);
-            g.DrawRectangle(&hovMaxPen, Gdiplus::Rect(cx, cy, 10, 10));
-        } else {
-            g.DrawRectangle(&btnPen, Gdiplus::Rect(cx, cy, 10, 10));
         }
+        g.DrawRectangle(&icoPen, Gdiplus::Rect(mx, my, 10, 10));
     }
 
-    // Close button
+    // Close button — X, red on hover
     {
+        int cx = (INT)(g_rcCloseBtn.left + (WINBTN_W - 10) / 2);
+        int cy = (INT)(g_rcCloseBtn.top + (WINBTN_H - 10) / 2);
         if (g_bCloseHover) {
             g.FillRectangle(g_pBrCloseHov, Gdiplus::Rect(g_rcCloseBtn.left, g_rcCloseBtn.top, WINBTN_W, WINBTN_H));
-            Gdiplus::Pen whitePen(Gdiplus::Color(255, 255, 255), 2.5f);
-            int cx = (INT)(g_rcCloseBtn.left + (WINBTN_W - 10) / 2);
-            int cy = (INT)(g_rcCloseBtn.top + (WINBTN_H - 10) / 2);
-            g.DrawLine(&whitePen, cx, cy, cx + 10, cy + 10);
-            g.DrawLine(&whitePen, cx + 10, cy, cx, cy + 10);
+            g.DrawLine(&icoWhite, cx, cy, cx + 10, cy + 10);
+            g.DrawLine(&icoWhite, cx + 10, cy, cx, cy + 10);
         } else {
-            int cx = (INT)(g_rcCloseBtn.left + (WINBTN_W - 10) / 2);
-            int cy = (INT)(g_rcCloseBtn.top + (WINBTN_H - 10) / 2);
-            g.DrawLine(&closePen, cx, cy, cx + 10, cy + 10);
-            g.DrawLine(&closePen, cx + 10, cy, cx, cy + 10);
+            g.DrawLine(&icoPen, cx, cy, cx + 10, cy + 10);
+            g.DrawLine(&icoPen, cx + 10, cy, cx, cy + 10);
         }
     }
 }
