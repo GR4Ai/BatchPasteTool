@@ -297,8 +297,7 @@
                                    Margin="0,0,8,0"/>
                         <Button Width="24" Height="24"
                                 Style="{StaticResource IconBtnStyle}"
-                                Command="{Binding TogglePinCommand}"
-                                PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                                Command="{Binding TogglePinCommand}">
                             <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/pin.png"
                                    Width="24" Height="24"/>
                         </Button>
@@ -308,8 +307,7 @@
                     <Button Grid.Column="1" Width="24" Height="24"
                             HorizontalAlignment="Center"
                             Style="{StaticResource IconBtnStyle}"
-                            Command="{Binding ToggleTransparencyCommand}"
-                            PreviewMouseLeftButtonDown="IconBtn_PreviewMouseLeftButtonDown">
+                            Command="{Binding ToggleTransparencyCommand}">
                         <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
                                Width="24" Height="24"/>
                     </Button>
@@ -325,8 +323,7 @@
                                 Value="{Binding SliderRatio, Mode=TwoWay}"
                                 VerticalAlignment="Center"
                                 Template="{StaticResource CustomSliderTemplate}"
-                                Margin="0,0,10,0"
-                                PreviewMouseLeftButtonDown="Slider_PreviewMouseLeftButtonDown"/>
+                                Margin="0,0,10,0"/>
 
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"

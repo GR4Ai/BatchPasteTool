@@ -123,20 +123,6 @@ public partial class MainWindow : Window
     }
 
     // ================================================================
-    //  PREVENT DRAG ON BUTTONS AND SLIDER
-    // ================================================================
-
-    private void IconBtn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true; // Let the button handle it
-    }
-
-    private void Slider_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        e.Handled = true; // Let the slider handle it
-    }
-
-    // ================================================================
     //  SCROLLBAR
     // ================================================================
 
