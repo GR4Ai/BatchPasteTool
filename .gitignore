@@ -1,0 +1,17 @@
+# Build outputs
+*.exe
+*.obj
+*.res
+*.pdb
+*.ilk
+
+# IDE files
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Temporary files
+*.tmp
+*.log
+BatchPasteTool.ini
