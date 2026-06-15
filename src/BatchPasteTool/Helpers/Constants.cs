@@ -69,7 +69,7 @@ public static class Constants
     public const string ColIconHover = "#D0D0D0";
 
     // Fonts
-    public const string FontFamily = "Segoe UI";
+    public const string FontFamily = "Microsoft YaHei";
     public const double TitleFontSize = 14.0;
     public const double SendFontSize = 12.0;
     public const double BtnFontSize = 12.0;
