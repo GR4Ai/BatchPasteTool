@@ -27,11 +27,11 @@ public partial class MainWindow : Window
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         VM.Initialize(this);
-        // Defer scrollbar update until after layout pass completes.
-        // At Loaded time the ItemsControl hasn't been measured yet,
-        // so ExtentHeight == ViewportHeight and the scrollbar is stuck at 0.
+        // Defer scrollbar update until well after layout completes.
+        // VirtualizingStackPanel doesn't report correct ExtentHeight
+        // at Loaded priority; Background gives it time to measure.
         Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
-            System.Windows.Threading.DispatcherPriority.Loaded);
+            System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -131,8 +131,25 @@ public partial class MainWindow : Window
 
     public void UpdateScrollbarRange()
     {
+        // VirtualizingStackPanel may report ExtentHeight == 0 or == ViewportHeight
+        // before any item is realized.  Fall back to a computed extent from item count.
         double extent = ContentScroller.ExtentHeight;
         double viewport = ContentScroller.ViewportHeight;
+
+        if (extent <= 0 || Math.Abs(extent - viewport) < 0.5)
+        {
+            // Each item row: Grid Height=40 + Margin.Bottom=2 = 42 px
+            extent = VM.Items.Count * 42;
+        }
+
+        // ViewportHeight may also be 0 before the first layout pass
+        // (e.g. when called from LoadState via SyncScroll).
+        if (viewport <= 0)
+        {
+            viewport = ActualHeight - Constants.TitleH - Constants.BottomH - 2; // 2 = border
+            if (viewport <= 0) viewport = 400; // sensible default
+        }
+
         VertScrollbar.Minimum = 0;
         VertScrollbar.Maximum = Math.Max(0, extent - viewport);
         VertScrollbar.ViewportSize = viewport;
