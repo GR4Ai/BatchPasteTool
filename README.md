@@ -23,22 +23,45 @@ Built with **C# WPF (.NET 8.0)** — borderless custom window with grayscale UI 
 
 ### Option 1: Download Pre-built
 
-Download `BatchPasteTool.exe` from the [Releases](https://github.com/GR4Ai/BatchPasteTool/releases) page and run it.
+Choose the version that fits your needs:
+
+| Version | File | Size | Description |
+|---------|------|------|-------------|
+| **Portable** | [BatchPasteTool.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool.exe) | ~162 MB | Single EXE, no installation, no .NET runtime required. Just run it. |
+| **Installer** | [BatchPasteTool-Setup.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool-Setup.exe) | ~67 MB | Self-extracting installer. Installs to `%LocalAppData%\Programs\BatchPasteTool`, creates Start Menu and Desktop shortcuts, includes uninstaller. |
+
+> **Note:** The portable version bundles the full .NET runtime (larger size but zero dependencies). The installer version uses ZIP compression for a smaller download while still being self-contained.
 
 ### Option 2: Build from Source
 
 ```bash
+# Regular build (requires .NET 8 runtime)
 cd src/BatchPasteTool
 dotnet build -c Release
 ```
 
-#### Self-contained Single-File Publish (no .NET runtime needed)
+#### Portable (self-contained single-file)
 
 ```bash
 dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 ```
 
-Produces a single `BatchPasteTool.exe` (~160 MB) that runs on any Windows x64 machine.
+Produces `publish/BatchPasteTool.exe` (~162 MB).
+
+#### Installer
+
+```bash
+# 1. Publish multi-file
+dotnet publish -c Release -r win-x64 --self-contained -o publish-installer
+
+# 2. Build SFX stub
+dotnet publish -c Release -o installer/SfxStub/publish installer/SfxStub/SfxStub.csproj
+
+# 3. Merge into installer EXE (requires PowerShell)
+powershell -File scripts/merge-installer.ps1
+```
+
+Produces `installer/BatchPasteTool-Setup.exe` (~67 MB).
 
 ## Project Structure
 
@@ -77,6 +100,11 @@ BatchPasteTool/
 │           ├── transparency.png
 │           └── undo.png
 ├── app.manifest
+├── installer/
+│   ├── install.ps1                   # Post-install script
+│   └── SfxStub/                      # Self-extracting stub source
+├── reference-images/                 # UI reference screenshots
+├── legacy/                           # Original C++ source files
 └── README.md
 ```
 
