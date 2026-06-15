@@ -169,7 +169,7 @@ public class MainViewModel : INotifyPropertyChanged
     {
         _window = window;
 
-        // Load saved state
+        // Load saved state (does NOT apply pin/transparency yet — deferred)
         LoadState();
 
         // Start foreground tracking
@@ -180,9 +180,14 @@ public class MainViewModel : INotifyPropertyChanged
         // Start auto-save
         _autoSaveTimer.Start();
 
-        // Apply saved pin/transparency
-        ApplyPin();
-        ApplyTransparency();
+        // Defer ApplyPin/ApplyTransparency until window HWND is fully ready.
+        // Without deferral, SetWindowPos(HWND_TOPMOST) may fail silently
+        // because the layered window's HWND is still settling.
+        window.Dispatcher.BeginInvoke(new Action(() =>
+        {
+            ApplyPin();
+            ApplyTransparency();
+        }), System.Windows.Threading.DispatcherPriority.Loaded);
     }
 
     public void Shutdown()
