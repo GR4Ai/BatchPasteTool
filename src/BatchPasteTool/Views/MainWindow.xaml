@@ -5,8 +5,7 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="True"
-        Background="Transparent"
+        Background="#B4B4B4"
         ResizeMode="CanResizeWithGrip"
         MinWidth="420"
         MinHeight="220"
@@ -268,16 +267,12 @@
     <!-- ================================================================ -->
     <!--  MAIN LAYOUT                                                     -->
     <!-- ================================================================ -->
-    <Grid>
-        <!-- Window border -->
-        <Border BorderBrush="#B4B4B4" BorderThickness="1"
-                Background="Transparent">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="32"/>  <!-- Title bar -->
-                    <RowDefinition Height="*"/>   <!-- Content area -->
-                    <RowDefinition Height="42"/>  <!-- Bottom bar -->
-                </Grid.RowDefinitions>
+    <Grid Margin="1" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>  <!-- Title bar -->
+            <RowDefinition Height="*"/>   <!-- Content area -->
+            <RowDefinition Height="42"/>  <!-- Bottom bar -->
+        </Grid.RowDefinitions>
 
                 <!-- ==================================================== -->
                 <!--  ROW 0: TITLE BAR                                    -->
@@ -456,7 +451,5 @@
                                 Command="{Binding ClearAllTextsCommand}"/>
                     </StackPanel>
                 </Grid>
-            </Grid>
-        </Border>
     </Grid>
 </Window>
