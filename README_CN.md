@@ -118,6 +118,8 @@ BatchPasteTool/
 
 ![BatchPasteTool 截图](reference-images/screenshot2.png)
 
+![BatchPasteTool 截图](reference-images/screenshot3.png)
+
 ### 控件说明
 
 | 控件 | 说明 |

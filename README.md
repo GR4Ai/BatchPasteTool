@@ -117,6 +117,8 @@ BatchPasteTool/
 
 ![BatchPasteTool Screenshot](reference-images/screenshot2.png)
 
+![BatchPasteTool Screenshot](reference-images/screenshot3.png)
+
 ### Controls
 
 | Control | Description |
