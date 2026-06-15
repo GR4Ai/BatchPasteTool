@@ -295,16 +295,55 @@ public class MainViewModel : INotifyPropertyChanged
     //  SEND / PASTE
     // ================================================================
 
-    public void SendItem(PasteItemViewModel? item)
+    private bool _isSending;
+
+    public async void SendItem(PasteItemViewModel? item)
     {
         if (item == null || string.IsNullOrEmpty(item.Text)) return;
+        if (_isSending) return;
 
-        _clipboard.SetText(item.Text);
-
-        var target = _foreground.LastKnownTargetWindow;
-        if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
+        _isSending = true;
+        try
         {
-            // AttachThreadInput to make SetForegroundWindow succeed instantly
+            _clipboard.SetText(item.Text);
+
+            var target = _foreground.LastKnownTargetWindow;
+            if (target != IntPtr.Zero && NativeMethods.IsWindow(target))
+            {
+                IntPtr fg = NativeMethods.GetForegroundWindow();
+                uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
+                uint curThread = NativeMethods.GetCurrentThreadId();
+
+                bool attached = false;
+                if (foreThread != 0 && foreThread != curThread)
+                    attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
+
+                NativeMethods.SetForegroundWindow(target);
+
+                if (attached)
+                    NativeMethods.AttachThreadInput(curThread, foreThread, false);
+
+                // await lets message pump run so target activates properly
+                await Task.Delay(50);
+            }
+
+            _inputSim.SimulateCtrlV();
+        }
+        finally
+        {
+            _isSending = false;
+        }
+    }
+
+    public void SendAllItems()
+    {
+        if (_isSending) return;
+        _isSending = true;
+        try
+        {
+            var target = _foreground.LastKnownTargetWindow;
+            if (target == IntPtr.Zero || !NativeMethods.IsWindow(target)) return;
+
             IntPtr fg = NativeMethods.GetForegroundWindow();
             uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
             uint curThread = NativeMethods.GetCurrentThreadId();
@@ -313,45 +352,25 @@ public class MainViewModel : INotifyPropertyChanged
             if (foreThread != 0 && foreThread != curThread)
                 attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
 
-            NativeMethods.SetForegroundWindow(target);
+            foreach (var item in Items)
+            {
+                if (!string.IsNullOrEmpty(item.Text))
+                {
+                    _clipboard.SetText(item.Text);
+                    NativeMethods.SetForegroundWindow(target);
+                    Thread.Sleep(40);
+                    _inputSim.SimulateCtrlV();
+                    Thread.Sleep(60);
+                }
+            }
 
             if (attached)
                 NativeMethods.AttachThreadInput(curThread, foreThread, false);
-
-            // Small sleep to let target activate before sending keys
-            Thread.Sleep(30);
         }
-
-        _inputSim.SimulateCtrlV();
-    }
-
-    public void SendAllItems()
-    {
-        var target = _foreground.LastKnownTargetWindow;
-        if (target == IntPtr.Zero || !NativeMethods.IsWindow(target)) return;
-
-        IntPtr fg = NativeMethods.GetForegroundWindow();
-        uint foreThread = NativeMethods.GetWindowThreadProcessId(fg, out _);
-        uint curThread = NativeMethods.GetCurrentThreadId();
-
-        bool attached = false;
-        if (foreThread != 0 && foreThread != curThread)
-            attached = NativeMethods.AttachThreadInput(curThread, foreThread, true);
-
-        foreach (var item in Items)
+        finally
         {
-            if (!string.IsNullOrEmpty(item.Text))
-            {
-                _clipboard.SetText(item.Text);
-                NativeMethods.SetForegroundWindow(target);
-                Thread.Sleep(30);
-                _inputSim.SimulateCtrlV();
-                Thread.Sleep(60);
-            }
+            _isSending = false;
         }
-
-        if (attached)
-            NativeMethods.AttachThreadInput(curThread, foreThread, false);
     }
 
     // ================================================================
