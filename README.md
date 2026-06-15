@@ -117,8 +117,8 @@ BatchPasteTool/
 
 <table>
   <tr>
-    <td><img src="reference-images/screenshot2.png" width="320"/></td>
-    <td><img src="reference-images/screenshot3.png" width="320"/></td>
+    <td width="50%"><img src="reference-images/screenshot2.png" width="100%"/></td>
+    <td width="50%"><img src="reference-images/screenshot3.png" width="100%"/></td>
   </tr>
 </table>
 
