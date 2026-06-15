@@ -988,6 +988,11 @@ void DrawTitleBar(Gdiplus::Graphics& g) {
     // Background — pure white (Win10 style)
     g.FillRectangle(g_pBrTitleBg, ToGdipRect(g_rcTitleBar));
 
+    // Bottom separator — makes title bar boundary visible
+    Gdiplus::Pen sepPen(Gdiplus::Color(200, 200, 200), 1.0f);
+    g.DrawLine(&sepPen, (INT)g_rcTitleBar.left, (INT)(g_rcTitleBar.bottom - 1),
+               (INT)g_rcTitleBar.right, (INT)(g_rcTitleBar.bottom - 1));
+
     // App name — Segoe UI 12px regular, dark gray (Win10 style)
     Gdiplus::SolidBrush textBr(Gdiplus::Color(26, 26, 26));
     g.DrawString(APP_NAME, -1, g_pFontTitle,
@@ -1250,6 +1255,12 @@ void OnPaint(HWND hwnd, HDC hdc) {
     DrawContentArea(g);
     DrawSlider(g);
     DrawBottomBar(g);
+
+    // Window border — visible edge for borderless window
+    {
+        Gdiplus::Pen borderPen(Gdiplus::Color(180, 180, 180), 1.0f);
+        g.DrawRectangle(&borderPen, 0, 0, w - 1, h - 1);
+    }
 
     // Blit
     BitBlt(hdc, 0, 0, w, h, memDC, 0, 0, SRCCOPY);
