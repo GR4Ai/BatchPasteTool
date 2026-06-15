@@ -115,9 +115,12 @@ BatchPasteTool/
 
 ### Interface Layout
 
-![BatchPasteTool Screenshot](reference-images/screenshot2.png)
-
-![BatchPasteTool Screenshot](reference-images/screenshot3.png)
+<table>
+  <tr>
+    <td><img src="reference-images/screenshot2.png" width="320"/></td>
+    <td><img src="reference-images/screenshot3.png" width="320"/></td>
+  </tr>
+</table>
 
 ### Controls
 

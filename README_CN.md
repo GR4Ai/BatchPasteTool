@@ -116,9 +116,12 @@ BatchPasteTool/
 
 ### 界面布局
 
-![BatchPasteTool 截图](reference-images/screenshot2.png)
-
-![BatchPasteTool 截图](reference-images/screenshot3.png)
+<table>
+  <tr>
+    <td><img src="reference-images/screenshot2.png" width="320"/></td>
+    <td><img src="reference-images/screenshot3.png" width="320"/></td>
+  </tr>
+</table>
 
 ### 控件说明
 
