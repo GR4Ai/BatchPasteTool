@@ -358,17 +358,17 @@
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"
                                 Command="{Binding DataContext.MinimizeCommand, RelativeSource={RelativeSource AncestorType=Window}}">
-                            <Path Data="M 14,16 L 32,16"
+                            <Path Data="M 3,5 L 15,5"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                  StrokeThickness="1.2" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
+                                  StrokeThickness="1.5" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                  Width="18" Height="8"/>
+                                  Width="18" Height="10"/>
                         </Button>
 
                         <!-- Max button -->
                         <Button Style="{StaticResource WinBtnStyle}"
                                 Command="{Binding DataContext.MaximizeRestoreCommand, RelativeSource={RelativeSource AncestorType=Window}}">
-                            <Path Data="M 14,12 L 32,12 L 32,22 L 14,22 Z"
+                            <Path Data="M 3,2 L 15,2 L 15,8 L 3,8 Z"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                                   StrokeThickness="1.2" StrokeLineJoin="Round"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -378,9 +378,9 @@
                         <!-- Close button -->
                         <Button Style="{StaticResource CloseBtnStyle}"
                                 Command="{Binding DataContext.CloseCommand, RelativeSource={RelativeSource AncestorType=Window}}">
-                            <Path Data="M 15,13 L 31,23 M 31,13 L 15,23"
+                            <Path Data="M 4,2 L 14,8 M 14,2 L 4,8"
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                                  StrokeThickness="1.2" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
+                                  StrokeThickness="1.3" StrokeEndLineCap="Round" StrokeStartLineCap="Round"
                                   HorizontalAlignment="Center" VerticalAlignment="Center"
                                   Width="18" Height="10"/>
                         </Button>
