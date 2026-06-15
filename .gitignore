@@ -17,6 +17,11 @@
 src/BatchPasteTool/bin/
 src/BatchPasteTool/obj/
 publish/
+publish-installer/
+
+# Installer build
+installer/SfxStub/bin/
+installer/SfxStub/obj/
 
 # Tool build outputs
 tools/*/bin/
