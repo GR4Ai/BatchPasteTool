@@ -52,19 +52,6 @@ public partial class MainWindow : Window
         base.OnSourceInitialized(e);
         IntPtr hwnd = new WindowInteropHelper(this).Handle;
 
-        // Extend DWM frame 1px into client area on all sides.
-        // This masks the WS_THICKFRAME NC border — DWM renders its
-        // frame (window background color) over the system NC border,
-        // making it invisible without WM_NCCALCSIZE handling.
-        var margins = new NativeMethods.MARGINS
-        {
-            cxLeftWidth = 1,
-            cxRightWidth = 1,
-            cyTopHeight = 1,
-            cyBottomHeight = 1
-        };
-        NativeMethods.DwmExtendFrameIntoClientArea(hwnd, ref margins);
-
         var source = HwndSource.FromHwnd(hwnd);
         source?.AddHook(WndProc);
     }

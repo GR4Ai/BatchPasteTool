@@ -5,7 +5,7 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="False"
+        AllowsTransparency="True"
         Background="White"
         ResizeMode="CanResize"
         MinWidth="420"
@@ -56,11 +56,11 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Close button (red hover) -->
+        <!-- Close button (dark gray hover) -->
         <Style x:Key="CloseBtnStyle" TargetType="Button" BasedOn="{StaticResource WinBtnStyle}">
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E81123"/>
+                    <Setter Property="Background" Value="#666666"/>
                     <Setter Property="Foreground" Value="White"/>
                 </Trigger>
             </Style.Triggers>
@@ -88,7 +88,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#644285F4"/>
+                    <Setter Property="Background" Value="#D0D0D0"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -99,8 +99,8 @@
         <Style x:Key="SendBtnStyle" TargetType="Button">
             <Setter Property="Width" Value="52"/>
             <Setter Property="Height" Value="26"/>
-            <Setter Property="Background" Value="#326EDC"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#DDDDDD"/>
+            <Setter Property="Foreground" Value="#333333"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -110,7 +110,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                                CornerRadius="1"
+                                CornerRadius="2"
                                 Width="52" Height="26">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center"/>
@@ -120,7 +120,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1450B4"/>
+                    <Setter Property="Background" Value="#C0C0C0"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -150,7 +150,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#DC3C32"/>
+                    <Setter Property="Foreground" Value="#555555"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -162,7 +162,7 @@
             <Setter Property="Width" Value="56"/>
             <Setter Property="Height" Value="30"/>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#326EDC"/>
+            <Setter Property="Foreground" Value="#2A2A2A"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -182,7 +182,8 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Foreground" Value="#1450B4"/>
+                    <Setter Property="Foreground" Value="#1A1A1A"/>
+                    <Setter Property="Background" Value="#AAAAAA"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -234,7 +235,7 @@
                 <!-- Separator line -->
                 <Line Grid.ColumnSpan="3"
                       VerticalAlignment="Bottom"
-                      Stroke="#BEBEBE" StrokeThickness="1"
+                      Stroke="#CCCCCC" StrokeThickness="1"
                       Margin="4,0,4,-1"/>
             </Grid>
         </DataTemplate>
@@ -243,13 +244,13 @@
         <!--  SLIDER TEMPLATE  (proper WPF Track/Thumb parts)             -->
         <!-- ============================================================ -->
         <ControlTemplate x:Key="CustomSliderTemplate" TargetType="Slider">
-            <Grid Height="18" Width="140">
+            <Grid Height="18">
                 <Track x:Name="PART_Track" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                     <Track.DecreaseRepeatButton>
                         <RepeatButton Command="Slider.DecreaseLarge">
                             <RepeatButton.Template>
                                 <ControlTemplate TargetType="RepeatButton">
-                                    <Border Height="6" CornerRadius="3,0,0,3" Background="#4285F4"
+                                    <Border Height="6" CornerRadius="3,0,0,3" Background="#777777"
                                             Margin="6,0,0,0"/>
                                 </ControlTemplate>
                             </RepeatButton.Template>
@@ -271,8 +272,8 @@
                             <Thumb.Template>
                                 <ControlTemplate TargetType="Thumb">
                                     <Ellipse Width="12" Height="12"
-                                             Fill="#4285F4"
-                                             Stroke="#2864C8"
+                                             Fill="#666666"
+                                             Stroke="#333333"
                                              StrokeThickness="1.5"/>
                                 </ControlTemplate>
                             </Thumb.Template>
@@ -301,7 +302,8 @@
                       MouseLeftButtonDown="TitleBar_MouseDown">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*" MinWidth="40"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
@@ -334,27 +336,29 @@
                         </Button>
                     </StackPanel>
 
-                    <!-- MIDDLE: Transparency icon -->
+                    <!-- Transparency icon (always visible) -->
                     <Button Grid.Column="1" Width="24" Height="24"
-                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
                             Style="{StaticResource IconBtnStyle}"
+                            Margin="8,0,8,0"
                             Command="{Binding DataContext.ToggleTransparencyCommand, RelativeSource={RelativeSource AncestorType=Window}}">
                         <Image Source="pack://application:,,,/BatchPasteTool;component/Resources/transparency.png"
                                Width="24" Height="24"/>
                     </Button>
 
-                    <!-- RIGHT: Transparency slider + Window buttons -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal"
-                                VerticalAlignment="Center">
+                    <!-- Transparency slider (stretchable, fills remaining space) -->
+                    <Slider Grid.Column="2"
+                            HorizontalAlignment="Stretch"
+                            Height="18"
+                            Minimum="0" Maximum="1"
+                            Value="{Binding SliderRatio, Mode=TwoWay}"
+                            VerticalAlignment="Center"
+                            Template="{StaticResource CustomSliderTemplate}"
+                            Margin="0,0,10,0"/>
 
-                        <!-- Transparency slider -->
-                        <Slider x:Name="TranspSlider"
-                                Width="140" Height="18"
-                                Minimum="0" Maximum="1"
-                                Value="{Binding SliderRatio, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                Template="{StaticResource CustomSliderTemplate}"
-                                Margin="0,0,10,0"/>
+                    <!-- RIGHT: Window buttons -->
+                    <StackPanel Grid.Column="3" Orientation="Horizontal"
+                                VerticalAlignment="Center">
 
                         <!-- Min button -->
                         <Button Style="{StaticResource WinBtnStyle}"
@@ -388,9 +392,9 @@
                     </StackPanel>
 
                     <!-- Title bar bottom separator -->
-                    <Line Grid.ColumnSpan="3"
+                    <Line Grid.ColumnSpan="4"
                           VerticalAlignment="Bottom"
-                          Stroke="#C8C8C8" StrokeThickness="1"/>
+                          Stroke="#444444" StrokeThickness="1"/>
                 </Grid>
 
                 <!-- ==================================================== -->
@@ -435,7 +439,7 @@
                 <!-- ==================================================== -->
                 <!--  ROW 2: BOTTOM BAR                                   -->
                 <!-- ==================================================== -->
-                <Grid Grid.Row="2" Background="White"
+                <Grid Grid.Row="2" Background="#EBEBEB"
                       SnapsToDevicePixels="True"
                       TextOptions.TextFormattingMode="Display">
                     <Grid.CacheMode>
@@ -445,7 +449,7 @@
                     </Grid.CacheMode>
                     <!-- Top separator -->
                     <Line VerticalAlignment="Top"
-                          Stroke="#B4B4B4" StrokeThickness="1"/>
+                          Stroke="#333333" StrokeThickness="1"/>
 
                     <!-- Left icon buttons -->
                     <StackPanel Orientation="Horizontal"

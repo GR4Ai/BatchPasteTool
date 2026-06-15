@@ -43,30 +43,30 @@ public static class Constants
     public const int MaxItems = 100;
     public const int MaxUndo = 200;
 
-    // Colors
+    // Colors (grayscale per reference image)
     public const string ColTitleBg = "#FFFFFF";
     public const string ColTitleText = "#1A1A1A";
     public const string ColContentBg = "#FFFFFF";
     public const string ColItemBg = "#F0F0F0";
-    public const string ColSeparator = "#BEBEBE";
-    public const string ColTitleSeparator = "#C8C8C8";
-    public const string ColBottomSeparator = "#B4B4B4";
+    public const string ColSeparator = "#CCCCCC";
+    public const string ColTitleSeparator = "#444444";
+    public const string ColBottomSeparator = "#333333";
     public const string ColWindowBorder = "#B4B4B4";
-    public const string ColSendBtn = "#326EDC";
-    public const string ColSendBtnHover = "#1450B4";
-    public const string ColSendBtnText = "#FFFFFF";
-    public const string ColCloseHover = "#E81123";
+    public const string ColSendBtn = "#DDDDDD";
+    public const string ColSendBtnHover = "#C0C0C0";
+    public const string ColSendBtnText = "#333333";
+    public const string ColCloseHover = "#666666";
     public const string ColMinMaxHover = "#E0E0E0";
-    public const string ColSliderFill = "#4285F4";
+    public const string ColSliderFill = "#777777";
     public const string ColSliderTrack = "#B4B4B4";
     public const string ColSliderEmpty = "#C8C8C8";
     public const string ColClearX = "#828282";
-    public const string ColClearXHover = "#DC3C32";
-    public const string ColBtnText = "#326EDC";
-    public const string ColBtnTextHover = "#1450B4";
-    public const string ColBottomBg = "#FFFFFF";
-    public const string ColPinActive = "#4285F4";
-    public const string ColIconHover = "#644285F4";
+    public const string ColClearXHover = "#555555";
+    public const string ColBtnText = "#2A2A2A";
+    public const string ColBtnTextHover = "#1A1A1A";
+    public const string ColBottomBg = "#EBEBEB";
+    public const string ColPinActive = "#555555";
+    public const string ColIconHover = "#D0D0D0";
 
     // Fonts
     public const string FontFamily = "Segoe UI";
