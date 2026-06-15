@@ -413,7 +413,8 @@
                                   VerticalScrollBarVisibility="Hidden"
                                   HorizontalScrollBarVisibility="Hidden"
                                   Background="White"
-                                  ScrollChanged="ContentScroller_ScrollChanged">
+                                  ScrollChanged="ContentScroller_ScrollChanged"
+                                  PreviewMouseWheel="ContentScroller_PreviewMouseWheel">
                         <ItemsControl ItemsSource="{Binding Items}"
                                       ItemTemplate="{StaticResource ItemTemplate}"
                                       VirtualizingStackPanel.IsVirtualizing="True"
