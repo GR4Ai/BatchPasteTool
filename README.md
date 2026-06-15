@@ -4,6 +4,8 @@ A lightweight Windows desktop utility for batch text pasting. Store multiple tex
 
 Built with **C# WPF (.NET 8.0)** — borderless custom window with grayscale UI design.
 
+> 📖 [中文版本](README_CN.md)
+
 ## Features
 
 - **Batch Paste**: Maintain multiple text entries, each with its own Send button. Clicking "Send" copies the text to the clipboard and pastes it at the cursor position (simulates Ctrl+V) in any application.
@@ -105,7 +107,8 @@ BatchPasteTool/
 │   └── SfxStub/                      # Self-extracting stub source
 ├── reference-images/                 # UI reference screenshots
 ├── legacy/                           # Original C++ source files
-└── README.md
+├── README.md
+└── README_CN.md
 ```
 
 ## Usage Guide
