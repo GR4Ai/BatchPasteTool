@@ -62,34 +62,21 @@ public partial class MainWindow : Window
         const int WM_EXITSIZEMOVE = 0x0232;
 
         // ── WM_NCCALCSIZE ──────────────────────────────────────────
-        // When resizing from the top or left edge the window position
-        // AND size change simultaneously.  If the DWM/client-area
-        // calculation drifts by even 1 frame the bottom bar appears
-        // to jump because its screen position is briefly incoherent.
-        // Forcing client = window on every NCCALCSIZE prevents the drift.
-        if (msg == WM_NCCALCSIZE)
+        // When resizing from top/left edges the window position and
+        // size change simultaneously.  If the DWM computes a client
+        // area offset the bottom bar flickers.
+        // We overwrite rgrc[0] (new client rect) with rgrc[2] (new
+        // window rect) so client ≡ window, but we do NOT set handled
+        // so WindowChrome still processes this message — setting
+        // handled=true would bypass WindowChrome and cause a ghost
+        // window ("影分身").
+        if (msg == WM_NCCALCSIZE && wParam != IntPtr.Zero)
         {
-            if (wParam != IntPtr.Zero)          // wParam == TRUE
-            {
-                // lParam → NCCALCSIZE_PARAMS
-                //   offset  0: rgrc[0]  new client rect (output)
-                //   offset 16: rgrc[1]  old window rect
-                //   offset 32: rgrc[2]  new window rect
-                // Copy new window rect → new client rect (no non-client area).
-                Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
-                Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
-                Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
-                Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
-                handled = true;
-                return (IntPtr)0x0400; // WVR_VALIDRECTS
-            }
-            else
-            {
-                // wParam == FALSE: lParam is RECT*.  No change needed —
-                // client should already equal window for borderless.
-                handled = true;
-                return IntPtr.Zero;
-            }
+            Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
+            Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
+            Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
+            Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
+            // intentionally leave handled=false
         }
 
         // ── WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE ─────────────────────
