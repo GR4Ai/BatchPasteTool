@@ -297,7 +297,7 @@ public class MainViewModel : INotifyPropertyChanged
 
     private bool _isSending;
 
-    public async void SendItem(PasteItemViewModel? item)
+    public void SendItem(PasteItemViewModel? item)
     {
         if (item == null || string.IsNullOrEmpty(item.Text)) return;
         if (_isSending) return;
@@ -323,16 +323,40 @@ public class MainViewModel : INotifyPropertyChanged
                 if (attached)
                     NativeMethods.AttachThreadInput(curThread, foreThread, false);
 
-                // await lets message pump run so target activates properly
-                await Task.Delay(50);
+                // Pump messages for 50ms so target window activates while we wait
+                PumpMessages(50);
             }
 
             _inputSim.SimulateCtrlV();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"SendItem error: {ex}");
         }
         finally
         {
             _isSending = false;
         }
+    }
+
+    /// <summary>
+    /// Pump Windows messages for the given duration without returning to the caller.
+    /// Safer than Thread.Sleep (which blocks the pump) or async void (unhandled exceptions crash).
+    /// </summary>
+    private static void PumpMessages(int milliseconds)
+    {
+        var frame = new System.Windows.Threading.DispatcherFrame();
+        var timer = new System.Windows.Threading.DispatcherTimer(
+            TimeSpan.FromMilliseconds(milliseconds),
+            System.Windows.Threading.DispatcherPriority.Normal,
+            (s, e) =>
+            {
+                ((System.Windows.Threading.DispatcherTimer)s!).Stop();
+                frame.Continue = false;
+            },
+            System.Windows.Threading.Dispatcher.CurrentDispatcher);
+        timer.Start();
+        System.Windows.Threading.Dispatcher.PushFrame(frame);
     }
 
     public void SendAllItems()
@@ -358,14 +382,18 @@ public class MainViewModel : INotifyPropertyChanged
                 {
                     _clipboard.SetText(item.Text);
                     NativeMethods.SetForegroundWindow(target);
-                    Thread.Sleep(40);
+                    PumpMessages(40);
                     _inputSim.SimulateCtrlV();
-                    Thread.Sleep(60);
+                    PumpMessages(60);
                 }
             }
 
             if (attached)
                 NativeMethods.AttachThreadInput(curThread, foreThread, false);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"SendAllItems error: {ex}");
         }
         finally
         {
