@@ -50,30 +50,11 @@ public partial class MainWindow : Window
     {
         if (msg == NativeMethods.WM_NCHITTEST)
         {
-            // Get screen coordinates
             int screenX = (int)(lParam.ToInt64() & 0xFFFF);
             int screenY = (int)(lParam.ToInt64() >> 16);
-
-            // Convert to client coordinates
             Point pt = PointFromScreen(new Point(screenX, screenY));
 
-            bool inTitleBar = pt.Y >= 0 && pt.Y < Constants.TitleH;
-
-            // Check if over interactive elements in title bar
-            if (inTitleBar)
-            {
-                // Check each button (approximate rects)
-                if (IsOverInteractiveTitleElement(pt))
-                {
-                    handled = true;
-                    return new IntPtr(NativeMethods.HTCLIENT);
-                }
-                // Allow drag on rest of title bar
-                handled = true;
-                return new IntPtr(NativeMethods.HTCAPTION);
-            }
-
-            // Border resize zones
+            // Only handle resize borders — title bar drag uses MouseLeftButtonDown
             if (pt.X <= ResizeBorder && pt.Y <= ResizeBorder)
             { handled = true; return new IntPtr(NativeMethods.HTTOPLEFT); }
             if (pt.X >= ActualWidth - ResizeBorder && pt.Y <= ResizeBorder)
@@ -93,23 +74,6 @@ public partial class MainWindow : Window
         }
 
         return IntPtr.Zero;
-    }
-
-    /// <summary>
-    /// Quick check if a client point is over a title bar interactive element.
-    /// Elements are now spread across the title bar: pin on left, transparency in middle,
-    /// slider + window buttons on right.
-    /// </summary>
-    private static bool IsOverInteractiveTitleElement(Point pt)
-    {
-        // Left side: pin button area (name text ~140px + pin 24px)
-        if (pt.X >= 140 && pt.X <= 174 && pt.Y < Constants.TitleH) return true;
-        // Middle: transparency icon (centered in the title bar, ~24px at center)
-        double midCenter = 620 / 2.0;
-        if (pt.X >= midCenter - 16 && pt.X <= midCenter + 16 && pt.Y < Constants.TitleH) return true;
-        // Right side: slider (140px) + window buttons (3 × 46px)
-        if (pt.X > (620 - 3 * Constants.WinBtnW - Constants.SliderW - 30)) return true;
-        return false;
     }
 
     // ================================================================
