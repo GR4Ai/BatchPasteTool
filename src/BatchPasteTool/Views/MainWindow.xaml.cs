@@ -2,6 +2,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using BatchPasteTool.ViewModels;
 
 namespace BatchPasteTool.Views;
@@ -9,6 +10,7 @@ namespace BatchPasteTool.Views;
 public partial class MainWindow : Window
 {
     private MainViewModel VM => (MainViewModel)DataContext;
+    private bool _isResizing;
 
     public MainWindow()
     {
@@ -36,6 +38,40 @@ public partial class MainWindow : Window
     }
 
     // ================================================================
+    //  WNDPROC HOOK — detect resize start/end to suppress layout
+    //  thrashing.  WindowChrome handles resize hit-testing natively;
+    //  this hook only watches WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE.
+    // ================================================================
+
+    protected override void OnSourceInitialized(EventArgs e)
+    {
+        base.OnSourceInitialized(e);
+        var source = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+        source?.AddHook(WndProc);
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        const int WM_ENTERSIZEMOVE = 0x0231;
+        const int WM_EXITSIZEMOVE = 0x0232;
+
+        if (msg == WM_ENTERSIZEMOVE)
+        {
+            _isResizing = true;
+        }
+        else if (msg == WM_EXITSIZEMOVE)
+        {
+            _isResizing = false;
+            // One final sync after the resize layout settles.
+            Dispatcher.BeginInvoke(new Action(UpdateScrollbarRange),
+                System.Windows.Threading.DispatcherPriority.Loaded);
+        }
+
+        // Never mark handled — WindowChrome needs these messages too.
+        return IntPtr.Zero;
+    }
+
+    // ================================================================
     //  TITLE BAR DRAG
     // ================================================================
 
@@ -56,7 +92,12 @@ public partial class MainWindow : Window
 
     private void ContentScroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        UpdateScrollbarRange();
+        // During window resize the viewport changes on every pixel.
+        // Updating the ScrollBar properties triggers extra layout passes
+        // that cascade to the bottom bar, causing visible flicker.
+        // WM_EXITSIZEMOVE does a final sync when the drag ends.
+        if (!_isResizing)
+            UpdateScrollbarRange();
     }
 
     public void UpdateScrollbarRange()
