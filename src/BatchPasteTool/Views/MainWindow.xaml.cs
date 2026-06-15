@@ -100,6 +100,11 @@ public partial class MainWindow : Window
         ContentScroller.ScrollToVerticalOffset(e.NewValue);
     }
 
+    private void ContentScroller_ScrollChanged(object sender, ScrollChangedEventArgs e)
+    {
+        UpdateScrollbarRange();
+    }
+
     public void UpdateScrollbarRange()
     {
         double extent = ContentScroller.ExtentHeight;

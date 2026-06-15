@@ -407,7 +407,8 @@
                                   CanContentScroll="True"
                                   VerticalScrollBarVisibility="Hidden"
                                   HorizontalScrollBarVisibility="Hidden"
-                                  Background="White">
+                                  Background="White"
+                                  ScrollChanged="ContentScroller_ScrollChanged">
                         <ItemsControl ItemsSource="{Binding Items}"
                                       ItemTemplate="{StaticResource ItemTemplate}"
                                       VirtualizingStackPanel.IsVirtualizing="True"
