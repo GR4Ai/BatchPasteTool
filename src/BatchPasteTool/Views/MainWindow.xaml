@@ -5,7 +5,7 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         Background="#B4B4B4"
         ResizeMode="CanResize"
         MinWidth="420"

@@ -70,29 +70,6 @@ public partial class MainWindow : Window
                 System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
-        // ── WM_SIZING ──────────────────────────────────────────────
-        // During top/left-edge resize the window position AND size
-        // change simultaneously.  WPF processes these asynchronously,
-        // which causes the bottom bar to render at an intermediate
-        // screen position for 1 frame (visible flicker).
-        // We apply the proposed bounds via a single SetWindowPos call
-        // so position + size change atomically.
-        if (msg == NativeMethods.WM_SIZING)
-        {
-            int left   = Marshal.ReadInt32(lParam, 0);
-            int top    = Marshal.ReadInt32(lParam, 4);
-            int right  = Marshal.ReadInt32(lParam, 8);
-            int bottom = Marshal.ReadInt32(lParam, 12);
-
-            NativeMethods.SetWindowPos(hwnd, IntPtr.Zero,
-                left, top,
-                right - left, bottom - top,
-                NativeMethods.SWP_NOZORDER | NativeMethods.SWP_NOACTIVATE);
-
-            handled = true;
-            return new IntPtr(1); // TRUE — message processed
-        }
-
         if (msg == NativeMethods.WM_NCHITTEST)
         {
             int screenX = (int)(lParam.ToInt64() & 0xFFFF);
