@@ -62,21 +62,28 @@ public partial class MainWindow : Window
         const int WM_EXITSIZEMOVE = 0x0232;
 
         // ── WM_NCCALCSIZE ──────────────────────────────────────────
-        // When resizing from top/left edges the window position and
-        // size change simultaneously.  If the DWM computes a client
-        // area offset the bottom bar flickers.
-        // We overwrite rgrc[0] (new client rect) with rgrc[2] (new
-        // window rect) so client ≡ window, but we do NOT set handled
-        // so WindowChrome still processes this message — setting
-        // handled=true would bypass WindowChrome and cause a ghost
-        // window ("影分身").
-        if (msg == WM_NCCALCSIZE && wParam != IntPtr.Zero)
+        // Remove the non-client area entirely so the DWM does not
+        // draw any border and WPF fills the full window rect.
+        // wParam==TRUE: lParam → NCCALCSIZE_PARAMS
+        //   offset  0: rgrc[0]  new client rect (output)
+        //   offset 32: rgrc[2]  new window rect
+        // Copy window rect → client rect (no non-client area).
+        if (msg == WM_NCCALCSIZE)
         {
-            Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
-            Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
-            Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
-            Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
-            // intentionally leave handled=false
+            if (wParam != IntPtr.Zero)
+            {
+                Marshal.WriteInt32(lParam,  0, Marshal.ReadInt32(lParam, 32)); // left
+                Marshal.WriteInt32(lParam,  4, Marshal.ReadInt32(lParam, 36)); // top
+                Marshal.WriteInt32(lParam,  8, Marshal.ReadInt32(lParam, 40)); // right
+                Marshal.WriteInt32(lParam, 12, Marshal.ReadInt32(lParam, 44)); // bottom
+                handled = true;
+                return (IntPtr)0x0400; // WVR_VALIDRECTS
+            }
+            else
+            {
+                handled = true;
+                return IntPtr.Zero;
+            }
         }
 
         // ── WM_ENTERSIZEMOVE / WM_EXITSIZEMOVE ─────────────────────
