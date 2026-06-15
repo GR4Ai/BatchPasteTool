@@ -5,9 +5,9 @@
         xmlns:vm="clr-namespace:BatchPasteTool.ViewModels"
         xmlns:conv="clr-namespace:BatchPasteTool.Views.Converters"
         WindowStyle="None"
-        AllowsTransparency="False"
+        AllowsTransparency="True"
         Background="#B4B4B4"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         MinWidth="420"
         MinHeight="220"
         Width="620"
@@ -435,6 +435,7 @@
                 <!--  ROW 2: BOTTOM BAR                                   -->
                 <!-- ==================================================== -->
                 <Grid Grid.Row="2" Background="White"
+                      x:Name="BottomBar"
                       SnapsToDevicePixels="True"
                       TextOptions.TextFormattingMode="Display">
                     <Grid.CacheMode>
