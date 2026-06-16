@@ -29,7 +29,7 @@ Choose the version that fits your needs:
 
 | Version | File | Size | Description |
 |---------|------|------|-------------|
-| **Portable** | [BatchPasteTool.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool.exe) | ~162 MB | Single EXE, no installation, no .NET runtime required. Just run it. |
+| **Portable** | [BatchPasteTool.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool.exe) | ~155 MB | Single EXE, no installation, no .NET runtime required. Just run it. |
 | **Installer** | [BatchPasteTool-Setup.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool-Setup.exe) | ~67 MB | Self-extracting installer. Installs to `%LocalAppData%\Programs\BatchPasteTool`, creates Start Menu and Desktop shortcuts, includes uninstaller. |
 
 > **Note:** The portable version bundles the full .NET runtime (larger size but zero dependencies). The installer version uses ZIP compression for a smaller download while still being self-contained.
@@ -48,7 +48,7 @@ dotnet build -c Release
 dotnet publish -c Release -r win-x64 --self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
 ```
 
-Produces `publish/BatchPasteTool.exe` (~162 MB).
+Produces `publish/BatchPasteTool.exe` (~155 MB).
 
 #### Installer
 

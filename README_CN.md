@@ -29,7 +29,7 @@
 
 | 版本 | 文件 | 大小 | 说明 |
 |------|------|------|------|
-| **便携版** | [BatchPasteTool.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool.exe) | ~162 MB | 单文件 EXE，无需安装，无需 .NET 运行时。直接运行即可。 |
+| **便携版** | [BatchPasteTool.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool.exe) | ~155 MB | 单文件 EXE，无需安装，无需 .NET 运行时。直接运行即可。 |
 | **安装包** | [BatchPasteTool-Setup.exe](https://github.com/GR4Ai/BatchPasteTool/releases/latest/download/BatchPasteTool-Setup.exe) | ~67 MB | 自解压安装程序。安装到 `%LocalAppData%\Programs\BatchPasteTool`，创建开始菜单和桌面快捷方式，含卸载程序。 |
 
 > **说明：** 便携版内嵌完整 .NET 运行时（体积较大但零依赖）。安装包使用 ZIP 压缩以减小下载体积，同时保持自包含。
